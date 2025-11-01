@@ -10,7 +10,7 @@ export const BurgerIngredient = ({
   return (
     <div className={styles.burger_ingredient}>
       <Counter count={123} size="small" extraClass={styles.burger_ingredient_counter} />
-      <img src={ingredient.image} />
+      <img src={ingredient.image} alt={`Изображение ${ingredient.name}`} />
       <div className={styles.burger_ingredient_price}>
         <span className="text text_type_digits-default">{ingredient.price}</span>
         <CurrencyIcon type="primary" />
