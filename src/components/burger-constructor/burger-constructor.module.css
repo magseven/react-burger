@@ -1,7 +1,35 @@
 .burger_constructor {
   display: flex;
   flex-direction: column;
+  gap: 16px;
   width: 600px;
   padding-bottom: 20px;
   color: var(--text-primary-color);
+}
+
+.burger_constructor_line {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
+.burger_constructor_frame {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: scroll;
+}
+
+.burger_constructor_total {
+  display: flex;
+  gap: 40px;
+  margin-top: 24px;
+  margin-left: auto;
+}
+
+.burger_constructor_cost {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }

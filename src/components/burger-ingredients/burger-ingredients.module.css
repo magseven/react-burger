@@ -6,10 +6,21 @@
   font-family: 'Jet Brains Mono', serif;
 }
 
+.burger_tab {
+  overflow-y: scroll;
+}
+
 .menu {
   display: flex;
   margin: 0;
   padding: 0;
   text-align: center;
   list-style-type: none;
+}
+
+.ingredients_grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 0 16px;
 }

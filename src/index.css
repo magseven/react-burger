@@ -15,3 +15,9 @@ body {
     scrollbar-width: thin;
   }
 }
+
+/* Text align */
+
+.text-align-center {
+  text-align: center;
+}

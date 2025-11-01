@@ -1,0 +1,17 @@
+.burger_ingredient {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.burger_ingredient_price {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.burger_ingredient_counter {
+  position: relative;
+  align-self: end;
+}
