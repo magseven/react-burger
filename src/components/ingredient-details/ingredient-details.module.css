@@ -1,0 +1,11 @@
+.macronutrients {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.macronutrient {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

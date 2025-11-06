@@ -20,15 +20,18 @@ const tabs = [
 export const BurgerIngredientsGrid = ({
   ingredients,
   title,
+  onIngredientClick,
 }: TBurgerIngredientsGridProps): React.JSX.Element => {
-  console.log(ingredients);
-
   return (
     <div className="mt-5 mb-5">
       <span className="text text_type_main-medium">{title}</span>
       <div className={styles.ingredients_grid}>
         {ingredients.map((ingr) => (
-          <BurgerIngredient ingredient={ingr} key={ingr._id} />
+          <BurgerIngredient
+            key={ingr._id}
+            ingredient={ingr}
+            onIngredientClick={onIngredientClick}
+          />
         ))}
       </div>
     </div>
@@ -37,9 +40,8 @@ export const BurgerIngredientsGrid = ({
 
 export const BurgerIngredients = ({
   ingredients,
+  onIngredientClick,
 }: TBurgerIngredientsProps): React.JSX.Element => {
-  console.log(ingredients);
-
   const [currentTab, setCurrentTab] = useState<TTab>('bun');
 
   const handleTabClick = (tab: TTab): void => {
@@ -68,6 +70,7 @@ export const BurgerIngredients = ({
             title={tab.label}
             ingredients={ingredients.filter((ingr) => ingr.type === tab.value)}
             key={tab.value}
+            onIngredientClick={onIngredientClick}
           />
         ))}
       </div>

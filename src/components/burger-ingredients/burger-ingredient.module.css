@@ -12,6 +12,6 @@
 }
 
 .burger_ingredient_counter {
-  position: relative;
+  position: relative !important;
   align-self: end;
 }
