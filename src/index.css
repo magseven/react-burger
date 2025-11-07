@@ -15,3 +15,15 @@ body {
     scrollbar-width: thin;
   }
 }
+
+.text-align-center {
+  text-align: center;
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+.left-item {
+  margin-right: auto;
+}

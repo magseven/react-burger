@@ -6,6 +6,10 @@
   font-family: 'Jet Brains Mono', serif;
 }
 
+.burger_tab {
+  overflow-y: scroll;
+}
+
 .menu {
   display: flex;
   margin: 0;
