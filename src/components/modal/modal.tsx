@@ -2,6 +2,8 @@ import { CloseIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
+import ModalOverlay from './modal-overlay';
+
 import type React from 'react';
 
 import styles from './modal.module.css';
@@ -11,14 +13,6 @@ type TModalProps = {
   onClick: () => void;
   title: string;
   children: React.ReactNode;
-};
-
-type TModalOverlayProps = {
-  onClick: () => void;
-};
-
-const ModalOverlay = ({ onClick }: TModalOverlayProps): React.JSX.Element => {
-  return <div className={styles.overlay} onClick={onClick}></div>;
 };
 
 export const Modal = ({

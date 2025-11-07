@@ -1,13 +1,9 @@
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 
-import { BurgerIngredient } from './burger-ingredient';
+import BurgerIngredientsGrid from './burger-ingredients-grid';
 
-import type {
-  TBurgerIngredientsProps,
-  TBurgerIngredientsGridProps,
-  TTab,
-} from './burger-ingredients.types';
+import type { TBurgerIngredientsProps, TTab } from './burger-ingredients.types';
 
 import styles from './burger-ingredients.module.css';
 
@@ -16,27 +12,6 @@ const tabs = [
   { value: 'main' as TTab, label: 'Начинки' },
   { value: 'sauce' as TTab, label: 'Соусы' },
 ];
-
-export const BurgerIngredientsGrid = ({
-  ingredients,
-  title,
-  onIngredientClick,
-}: TBurgerIngredientsGridProps): React.JSX.Element => {
-  return (
-    <div className="mt-5 mb-5">
-      <span className="text text_type_main-medium">{title}</span>
-      <div className={styles.ingredients_grid}>
-        {ingredients.map((ingr) => (
-          <BurgerIngredient
-            key={ingr._id}
-            ingredient={ingr}
-            onIngredientClick={onIngredientClick}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
 
 export const BurgerIngredients = ({
   ingredients,
