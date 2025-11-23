@@ -1,6 +1,6 @@
 import { BurgerIngredient } from './burger-ingredient';
 
-import type { TBurgerIngredientsGridProps } from './burger-ingredients.types';
+import type { TBurgerIngredientsGridProps } from './types';
 
 import styles from './burger-ingredients-grid.module.css';
 
