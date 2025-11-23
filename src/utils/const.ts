@@ -5,3 +5,5 @@ export const TabNames = {
 } as const;
 
 export const ingredientName = 'ingredient';
+export const bunTopText = '(верх)';
+export const bunBottomText = '(низ)';

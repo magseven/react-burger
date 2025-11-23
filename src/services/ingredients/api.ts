@@ -1,8 +1,11 @@
+import { createSelector } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import BASE_URL from '../../utils/config-api';
 
+import type { RootState } from '../types';
 import type { TIngredientsResponse } from './types';
+import type { TIngredient } from '@/utils/types';
 
 export const ingredientsApiConfig = {
   baseUrl: BASE_URL,
@@ -28,5 +31,14 @@ export const ingredientsApi = createApi({
     }),
   }),
 });
+
+const selectIngredientsResult = ingredientsApi.endpoints.getIngredients.select();
+
+export const selectIngredientsByType = (
+  type: string
+): ((state: RootState) => TIngredient[]) =>
+  createSelector(selectIngredientsResult, (result): TIngredient[] =>
+    (result.data?.data ?? []).filter((ingr) => ingr.type === type)
+  );
 
 export const { useGetIngredientsQuery } = ingredientsApi;

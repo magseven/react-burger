@@ -16,7 +16,6 @@ const tabs = [
 ];
 
 export const BurgerIngredients = ({
-  ingredients,
   onIngredientClick,
 }: TBurgerIngredientsProps): React.JSX.Element => {
   const [currentTab, setCurrentTab] = useState<TTab>();
@@ -75,7 +74,7 @@ export const BurgerIngredients = ({
           <div ref={setTabRef(index)} key={index}>
             <BurgerIngredientsGrid
               title={tab.label}
-              ingredients={ingredients.filter((ingr) => ingr.type === tab.value)}
+              type={tab.value}
               key={tab.value}
               onIngredientClick={onIngredientClick}
             />

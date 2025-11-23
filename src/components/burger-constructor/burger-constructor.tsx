@@ -10,10 +10,10 @@ import {
   CurrencyIcon,
   Button,
 } from '@krgaa/react-developer-burger-ui-components';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { TabNames } from '@utils/const';
+import { bunTopText, bunBottomText, TabNames } from '@utils/const';
 
 import DropTarget from '../drop-target/drop-target';
 import { SortableIngredient } from '../sortable-ingredient/sortable-ingredient';
@@ -23,15 +23,21 @@ import type { TIngredient } from '@/utils/types';
 import styles from './burger-constructor.module.css';
 
 type TBurgerConstructorProps = {
+  orderLoading: boolean;
   onOrderClick: () => void;
 };
 
 export const BurgerConstructor = ({
+  orderLoading,
   onOrderClick,
 }: TBurgerConstructorProps): React.JSX.Element => {
   const [bunTargetHovered, setBunTargetHovered] = useState(false);
   const ingredients = useSelector(selectIngredients);
   const bun = useSelector(selectBun);
+
+  useEffect(() => {
+    if (bun) setBunTargetHovered(false);
+  }, [bun]);
   const cost = useMemo(
     () =>
       ingredients.reduce((acc, ingr) => acc + ingr.price, 0) + (bun ? 2 * bun.price : 0),
@@ -72,8 +78,8 @@ export const BurgerConstructor = ({
       ) : (
         <DropTarget type={TabNames.bun} onDropHandler={handleDrop}>
           <ConstructorElement
-            extraClass={`${styles['burger-constructor__element-max-height']} ml-7`}
-            text={bun.name}
+            extraClass={`${styles['burger-constructor__element-min-height']} ${styles.bun_text} ml-7`}
+            text={`${bun.name}\n${bunTopText}`}
             price={bun.price}
             thumbnail={bun.image}
             type="top"
@@ -135,8 +141,8 @@ export const BurgerConstructor = ({
       ) : (
         <DropTarget type={TabNames.bun} onDropHandler={handleDrop}>
           <ConstructorElement
-            extraClass={`${styles['burger-constructor__element-min-height']} ml-7`}
-            text={bun.name}
+            extraClass={`${styles['burger-constructor__element-min-height']} ${styles.bun_text} ml-7`}
+            text={`${bun.name}\n${bunBottomText}`}
             price={bun.price}
             thumbnail={bun.image}
             type="bottom"
@@ -149,8 +155,14 @@ export const BurgerConstructor = ({
           <span className="text text_type_digits-medium">{cost}</span>
           <CurrencyIcon type="primary" />
         </div>
-        <Button htmlType="button" type="primary" size="medium" onClick={onOrderClick}>
-          Оформить заказ
+        <Button
+          htmlType="button"
+          type="primary"
+          size="medium"
+          disabled={bun === null}
+          onClick={onOrderClick}
+        >
+          {orderLoading ? 'Заказ оформляется' : 'Оформить заказ'}
         </Button>
       </div>
     </section>

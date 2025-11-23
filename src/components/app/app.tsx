@@ -1,4 +1,8 @@
-import { selectBun, selectIngredients } from '@/services/ctor-ingredients/reducer';
+import {
+  clearOrder,
+  selectBun,
+  selectIngredients,
+} from '@/services/ctor-ingredients/reducer';
 import {
   selectIngredient,
   clearIngredient,
@@ -28,7 +32,7 @@ import styles from './app.module.css';
 
 export const App = (): React.JSX.Element => {
   const { data, isLoading: loading, error } = useGetIngredientsQuery();
-  const [postOrder] = usePostOrderMutation();
+  const [postOrder, { isLoading: orderLoading }] = usePostOrderMutation();
 
   const dispatch = useDispatch();
 
@@ -66,11 +70,11 @@ export const App = (): React.JSX.Element => {
   const handleCloseModal = useCallback(() => {
     dispatch(clearIngredient());
     dispatch(closeOrderModal());
+    dispatch(clearOrder());
   }, []);
 
   if (loading) {
-    console.log('loading');
-    return <div>Loading...</div>;
+    return <div>Загружается список ингредиентов...</div>;
   }
 
   if (error) {
@@ -93,12 +97,12 @@ export const App = (): React.JSX.Element => {
         Соберите бургер
       </h1>
       <main className={`${styles.main} pl-5 pr-5`}>
-        <BurgerIngredients
-          ingredients={ingredients ?? []}
-          onIngredientClick={handleIngredientClick}
-        />
+        <BurgerIngredients onIngredientClick={handleIngredientClick} />
         {ingredients?.[0] && (
-          <BurgerConstructor onOrderClick={() => void handleOrderClick()} />
+          <BurgerConstructor
+            orderLoading={orderLoading}
+            onOrderClick={() => void handleOrderClick()}
+          />
         )}
       </main>
       {ingredientShowDetails && (

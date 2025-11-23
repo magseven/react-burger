@@ -39,6 +39,10 @@ export const ctorSlice = createSlice({
         );
       }
     },
+    clearOrder(state) {
+      state.bun = null;
+      state.ingredients = [];
+    },
     reorderIngredient(state, action: PayloadAction<{ id: string; index: number }>) {
       const found = state.ingredients.findIndex((ingr) => ingr.id === action.payload.id);
       if (found >= 0)
@@ -57,7 +61,7 @@ export const ctorSlice = createSlice({
 });
 
 export const { selectBun, selectIngredients } = ctorSlice.selectors;
-export const { addBun, addIngredient, deleteIngredient, reorderIngredient } =
+export const { addBun, addIngredient, deleteIngredient, clearOrder, reorderIngredient } =
   ctorSlice.actions;
 
 export const selectCtorCounter = createSelector(
