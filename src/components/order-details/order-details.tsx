@@ -1,11 +1,15 @@
+import { selectOrderNumber } from '@/services/order/orderModalSlice';
 import { CheckMarkIcon } from '@krgaa/react-developer-burger-ui-components';
+import { useSelector } from 'react-redux';
 
 import styles from './order-details.module.css';
 
 export const OrderDetails = (): React.JSX.Element => {
+  const orderNumber = useSelector(selectOrderNumber);
+
   return (
     <>
-      <span className="text text_type_digits-large mb-4">034536</span>
+      <span className="text text_type_digits-large mb-4">{orderNumber}</span>
       <span className="text text_type_main-default mb-6">Идентификатор заказа</span>
       <div className={styles.circle}>
         <CheckMarkIcon type="primary" />

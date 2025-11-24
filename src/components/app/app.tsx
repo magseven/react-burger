@@ -1,5 +1,22 @@
-import { getIngredients } from '@/api/ingredients';
-import { useState, useEffect, useCallback } from 'react';
+import {
+  clearOrder,
+  selectBun,
+  selectIngredients,
+} from '@/services/ctor-ingredients/reducer';
+import {
+  selectIngredient,
+  clearIngredient,
+  selectSelectedId,
+} from '@/services/ingredient-details/reducer';
+import { useGetIngredientsQuery } from '@/services/ingredients/api';
+import { usePostOrderMutation } from '@/services/order/api';
+import {
+  closeOrderModal,
+  openOrderModal,
+  selectOrderIsOpen,
+} from '@/services/order/orderModalSlice';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { AppHeader } from '@components/app-header/app-header';
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
@@ -8,45 +25,70 @@ import { IngredientDetails } from '@components/ingredient-details/ingredient-det
 import { Modal } from '@components/modal/modal';
 import { OrderDetails } from '@components/order-details/order-details';
 
+import type { TOrderRequest } from '@/services/order/types';
 import type { TIngredient } from '@utils/types.ts';
 
 import styles from './app.module.css';
 
 export const App = (): React.JSX.Element => {
-  const [ingredients, setIngredients] = useState([] as TIngredient[]);
-  const [loading, setLoading] = useState(true);
-  const [selectedIngredient, setSelectedIngredient] = useState<null | TIngredient>(null);
-  const [orderClicked, setOrderCLicked] = useState(false);
+  const { data, isLoading: loading, error } = useGetIngredientsQuery();
+  const [postOrder, { isLoading: orderLoading }] = usePostOrderMutation();
+
+  const dispatch = useDispatch();
+
+  const selectedId = useSelector(selectSelectedId);
+  const orderIsOpen = useSelector(selectOrderIsOpen);
+  const bun = useSelector(selectBun);
+  const ctorIngredients = useSelector(selectIngredients);
 
   const handleIngredientClick = (ingredient: TIngredient): void => {
-    setSelectedIngredient(ingredient);
+    dispatch(selectIngredient(ingredient._id));
   };
 
-  const handleOrderClick = (): void => {
-    setOrderCLicked(true);
+  const handleOrderClick = async (): Promise<void> => {
+    try {
+      const orderData: TOrderRequest = {
+        ingredients: [
+          ...(bun ? [bun._id] : []),
+          ...ctorIngredients.map((i) => i._id),
+          ...(bun ? [bun._id] : []),
+        ],
+      };
+
+      const result = await postOrder(orderData).unwrap();
+      dispatch(openOrderModal(result.order.number));
+    } catch (err: unknown) {
+      dispatch(closeOrderModal());
+      if (err instanceof Error) {
+        console.error('Ошибка при создании заказа:', err.message);
+      } else {
+        console.error('Неизвестная ошибка при создании заказа', err);
+      }
+    }
   };
 
   const handleCloseModal = useCallback(() => {
-    setSelectedIngredient(null);
-    setOrderCLicked(false);
+    dispatch(clearIngredient());
+    dispatch(closeOrderModal());
+    dispatch(clearOrder());
   }, []);
 
-  useEffect(() => {
-    async function loadIngredients(): Promise<void> {
-      try {
-        const data = await getIngredients();
-        setIngredients(data);
-      } catch (err) {
-        console.log('Отсутствует список ингредиентов', err);
-      } finally {
-        setLoading(false);
-      }
+  if (loading) {
+    return <div>Загружается список ингредиентов...</div>;
+  }
+
+  if (error) {
+    if ('data' in error) {
+      console.log('Error:', error.data);
+      return <div>Error...</div>;
+    } else {
+      console.log('Error:', error);
+      return <div>Error...</div>;
     }
+  }
 
-    void loadIngredients();
-  }, []);
-
-  if (loading) return <p>Загрузка...</p>;
+  const ingredients: TIngredient[] = data?.data ?? [];
+  const ingredientShowDetails = ingredients?.find((ingr) => ingr._id === selectedId);
 
   return (
     <div className={styles.app}>
@@ -55,22 +97,20 @@ export const App = (): React.JSX.Element => {
         Соберите бургер
       </h1>
       <main className={`${styles.main} pl-5 pr-5`}>
-        <BurgerIngredients
-          ingredients={ingredients}
-          onIngredientClick={handleIngredientClick}
-        />
-        <BurgerConstructor
-          ingredients={ingredients}
-          bun={ingredients[0]}
-          onOrderClick={handleOrderClick}
-        />
+        <BurgerIngredients onIngredientClick={handleIngredientClick} />
+        {ingredients?.[0] && (
+          <BurgerConstructor
+            orderLoading={orderLoading}
+            onOrderClick={() => void handleOrderClick()}
+          />
+        )}
       </main>
-      {selectedIngredient && (
+      {ingredientShowDetails && (
         <Modal isOpen={true} onClick={handleCloseModal} title="Детали ингредиента">
-          <IngredientDetails ingredient={selectedIngredient} />
+          <IngredientDetails ingredient={ingredientShowDetails} />
         </Modal>
       )}
-      {orderClicked && (
+      {orderIsOpen && (
         <Modal isOpen={true} onClick={handleCloseModal} title="">
           <OrderDetails />
         </Modal>
@@ -78,5 +118,3 @@ export const App = (): React.JSX.Element => {
     </div>
   );
 };
-
-export default App;

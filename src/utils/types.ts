@@ -1,4 +1,5 @@
 export type TIngredient = {
+  id?: string;
   _id: string;
   name: string;
   type: string;

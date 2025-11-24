@@ -7,17 +7,11 @@
   color: var(--text-primary-color);
 }
 
-.burger_constructor_line {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 4px;
-}
-
 .burger_constructor_frame {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  max-height: 100%;
   overflow-y: scroll;
 }
 
@@ -32,4 +26,47 @@
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.burger-constructor_blank_element {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 488px;
+  min-height: 48px;
+  max-height: 48px;
+  padding: 16px 24px;
+  color: #f2f2f3;
+  background: var(--background-element);
+  border-radius: var(--top-constructor-item-border-radius);
+}
+
+.burger-constructor__top_blank_element {
+  border-radius: var(--top-constructor-item-border-radius);
+}
+
+.burger-constructor__bottom_blank_element {
+  border-radius: var(--bottom-constructor-item-border-radius);
+}
+
+.burger-constructor__middle_blank_element {
+  width: 90%;
+  border-radius: var(--common-border-radius-s);
+}
+
+.burger-constructor__element-max-height {
+  max-height: 80px;
+}
+
+.burger-constructor__element-min-height {
+  min-height: 0;
+}
+
+.hover_bun_border {
+  border: 1px solid blue;
+}
+
+.bun_text {
+  white-space: pre-line;
 }

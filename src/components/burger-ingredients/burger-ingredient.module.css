@@ -1,4 +1,5 @@
 .burger_ingredient {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,6 +13,6 @@
 }
 
 .burger_ingredient_counter {
-  position: relative !important;
+  position: absolute;
   align-self: end;
 }
