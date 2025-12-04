@@ -1,11 +1,23 @@
 .macronutrients {
   display: flex;
-  flex-direction: row;
-  gap: 20px;
+  justify-content: center; /* центрируем блоки по горизонтали */
+  gap: 20px; /* отступ между макронутриентами */
+  width: 100%;
+  max-width: 600px; /* ограничение ширины */
 }
 
 .macronutrient {
   display: flex;
+  flex-direction: column; /* вертикальная колонка внутри блока */
+  align-items: center; /* центрируем текст внутри блока */
+}
+
+.container {
+  display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center; /* центрирует все блоки по горизонтали */
+}
+
+.textCenter {
+  text-align: center; /* центрирует текст внутри блока */
 }

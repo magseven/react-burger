@@ -8,6 +8,7 @@ import BurgerIngredientsGrid from './burger-ingredients-grid';
 import type { TBurgerIngredientsProps, TTab } from './types';
 
 import styles from './burger-ingredients.module.css';
+// import { Link } from 'react-router-dom';
 
 const tabs = [
   { value: TabNames.bun as TTab, label: 'Булки' },

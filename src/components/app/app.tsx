@@ -1,110 +1,100 @@
+import { ForgotPassword } from '@/pages/forgot-password/forgot-password';
 import { Home } from '@/pages/home/home';
-import {} from //  clearOrder,
-//  selectBun,
-//  selectIngredients,
-'@/services/ctor-ingredients/reducer';
+import { NotFound } from '@/pages/not-found/not-found';
+import { SignIn } from '@/pages/sign-in/sign-in';
 import {
-  //  selectIngredient,
   clearIngredient,
   selectSelectedId,
 } from '@/services/ingredient-details/reducer';
 import { useGetIngredientsQuery } from '@/services/ingredients/api';
-//import { usePostOrderMutation } from '@/services/order/api';
-import {
-  closeOrderModal,
-  //  openOrderModal,
-  selectOrderIsOpen,
-} from '@/services/order/orderModalSlice';
+import { closeOrderModal, selectOrderIsOpen } from '@/services/order/orderModalSlice';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation, useParams } from 'react-router-dom';
 
 import { AppHeader } from '@components/app-header/app-header';
 import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
 import { Modal } from '@components/modal/modal';
 import { OrderDetails } from '@components/order-details/order-details';
 
-//import type { TOrderRequest } from '@/services/order/types';
 import type { TIngredient } from '@utils/types.ts';
+import type React from 'react';
 
 import styles from './app.module.css';
 
-export const App = (): React.JSX.Element => {
-  const { data, isLoading: loading, error } = useGetIngredientsQuery();
-  //  const [postOrder, { isLoading: orderLoading }] = usePostOrderMutation();
+const IngredientPage = ({
+  ingredients,
+}: {
+  ingredients: TIngredient[];
+}): React.JSX.Element => {
+  const params = useParams<{ id: string }>();
+  const id = params.id;
 
+  if (!ingredients.length) return <div>Загружается список ингредиентов...</div>;
+
+  const ingredientShowDetails = ingredients.find((ing) => ing._id === id);
+
+  if (!ingredientShowDetails) return <div>Ингредиент не найден</div>;
+
+  return <IngredientDetails ingredient={ingredientShowDetails} />;
+};
+
+export const App = (): React.JSX.Element => {
+  const location = useLocation();
+  const state = location.state as { backgroundLocation?: Location };
   const dispatch = useDispatch();
 
+  const { data, isLoading, error } = useGetIngredientsQuery();
   const selectedId = useSelector(selectSelectedId);
   const orderIsOpen = useSelector(selectOrderIsOpen);
-  // const bun = useSelector(selectBun);
-  // const ctorIngredients = useSelector(selectIngredients);
 
-  // const handleIngredientClick = (ingredient: TIngredient): void => {
-  //   dispatch(selectIngredient(ingredient._id));
-  // };
-
-  // const handleOrderClick = async (): Promise<void> => {
-  //   try {
-  //     const orderData: TOrderRequest = {
-  //       ingredients: [
-  //         ...(bun ? [bun._id] : []),
-  //         ...ctorIngredients.map((i) => i._id),
-  //         ...(bun ? [bun._id] : []),
-  //       ],
-  //     };
-
-  //     const result = await postOrder(orderData).unwrap();
-  //     dispatch(openOrderModal(result.order.number));
-  //   } catch (err: unknown) {
-  //     dispatch(closeOrderModal());
-  //     if (err instanceof Error) {
-  //       console.error('Ошибка при создании заказа:', err.message);
-  //     } else {
-  //       console.error('Неизвестная ошибка при создании заказа', err);
-  //     }
-  //   }
-  // };
-
-  const handleCloseModal = useCallback(() => {
+  const handleCloseModal: () => void = useCallback(() => {
     dispatch(clearIngredient());
     dispatch(closeOrderModal());
-    //dispatch(clearOrder());
-  }, []);
-
-  if (loading) {
-    return <div>Загружается список ингредиентов...</div>;
-  }
-
-  if (error) {
-    if ('data' in error) {
-      console.log('Error:', error.data);
-      return <div>Error...</div>;
-    } else {
-      console.log('Error:', error);
-      return <div>Error...</div>;
-    }
-  }
+  }, [dispatch]);
 
   const ingredients: TIngredient[] = data?.data ?? [];
-  const ingredientShowDetails = ingredients?.find((ingr) => ingr._id === selectedId);
+
+  if (isLoading) return <div>Загружается список ингредиентов...</div>;
+  if (error) return <div>Ошибка загрузки</div>;
+
+  const ingredientShowDetails = ingredients.find((ing) => ing._id === selectedId);
 
   return (
     <div className={styles.app}>
       <AppHeader />
-      <h1 className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
-        Соберите бургер
-      </h1>
-      <BrowserRouter>
+
+      {/* Основные маршруты */}
+      <Routes location={state?.backgroundLocation ?? location}>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/ingredient/:id"
+          element={
+            <div className={styles.details}>
+              <IngredientPage ingredients={ingredients} />
+            </div>
+          }
+        />
+        <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+
+      {/* Модалка ингредиента при клике */}
+      {state?.backgroundLocation && ingredientShowDetails && (
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/ingredient/:id"
+            element={
+              <Modal isOpen={true} onClick={handleCloseModal} title="Детали ингредиента">
+                <IngredientDetails ingredient={ingredientShowDetails} />
+              </Modal>
+            }
+          />
         </Routes>
-      </BrowserRouter>
-      {ingredientShowDetails && (
-        <Modal isOpen={true} onClick={handleCloseModal} title="Детали ингредиента">
-          <IngredientDetails ingredient={ingredientShowDetails} />
-        </Modal>
       )}
+
+      {/* Модалка заказа */}
       {orderIsOpen && (
         <Modal isOpen={true} onClick={handleCloseModal} title="">
           <OrderDetails />

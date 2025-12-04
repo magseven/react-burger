@@ -1,29 +1,12 @@
-import {
-  //clearOrder,
-  selectBun,
-  selectIngredients,
-} from '@/services/ctor-ingredients/reducer';
-import {
-  selectIngredient,
-  //clearIngredient,
-  //selectSelectedId,
-} from '@/services/ingredient-details/reducer';
+import { selectBun, selectIngredients } from '@/services/ctor-ingredients/reducer';
+import { selectIngredient } from '@/services/ingredient-details/reducer';
 import { useGetIngredientsQuery } from '@/services/ingredients/api';
 import { usePostOrderMutation } from '@/services/order/api';
-import {
-  closeOrderModal,
-  openOrderModal,
-  //selectOrderIsOpen,
-} from '@/services/order/orderModalSlice';
+import { closeOrderModal, openOrderModal } from '@/services/order/orderModalSlice';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-//import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-//import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
-//import { Modal } from '@components/modal/modal';
-//import { OrderDetails } from '@components/order-details/order-details';
 
-//import { AppHeader } from '@components/app-header/app-header';
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
 import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
 
@@ -38,8 +21,6 @@ export const Home = (): React.JSX.Element => {
 
   const dispatch = useDispatch();
 
-  //const selectedId = useSelector(selectSelectedId);
-  //const orderIsOpen = useSelector(selectOrderIsOpen);
   const bun = useSelector(selectBun);
   const ctorIngredients = useSelector(selectIngredients);
 
@@ -69,12 +50,6 @@ export const Home = (): React.JSX.Element => {
     }
   };
 
-  // const handleCloseModal = useCallback(() => {
-  //   dispatch(clearIngredient());
-  //   dispatch(closeOrderModal());
-  //   //dispatch(clearOrder());
-  // }, []);
-
   if (loading) {
     return <div>Загружается список ингредиентов...</div>;
   }
@@ -90,16 +65,14 @@ export const Home = (): React.JSX.Element => {
   }
 
   const ingredients: TIngredient[] = data?.data ?? [];
-  //const ingredientShowDetails = ingredients?.find((ingr) => ingr._id === selectedId);
 
   return (
     <>
-      {/*    <div className={styles.app}>
-      <AppHeader />
-      <h1 className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
-        Соберите бургер
-      </h1>*/}
       <DndProvider backend={HTML5Backend}>
+        <h1 className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
+          Соберите бургер
+        </h1>
+
         <main className={`${styles.main} pl-5 pr-5`}>
           <BurgerIngredients onIngredientClick={handleIngredientClick} />
           {ingredients?.[0] && (
@@ -109,18 +82,7 @@ export const Home = (): React.JSX.Element => {
             />
           )}
         </main>
-        {/* {ingredientShowDetails && (
-        <Modal isOpen={true} onClick={handleCloseModal} title="Детали ингредиента">
-          <IngredientDetails ingredient={ingredientShowDetails} />
-        </Modal>
-      )}
-      {orderIsOpen && (
-        <Modal isOpen={true} onClick={handleCloseModal} title="">
-          <OrderDetails />
-        </Modal>
-      )} */}
       </DndProvider>
-      {/*    </div>*/}
     </>
   );
 };
