@@ -5,11 +5,10 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { App } from '@components/app/app';
 
-import { configureStore } from './services/store.js';
+import { store } from './services/store.js';
 
 import './index.css';
 
-export const store = configureStore();
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>

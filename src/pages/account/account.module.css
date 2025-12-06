@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* форма слева внутри колонки */
+  min-width: 300px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.buttons {
+  margin-left: auto;
+}

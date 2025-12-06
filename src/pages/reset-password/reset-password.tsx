@@ -1,17 +1,20 @@
+import { useAppDispatch } from '@/services/store';
+import { passwordReset } from '@/services/user/action';
 import {
   Input,
-  Button,
   PasswordInput,
+  Button,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import type React from 'react';
 
-import styles from './sign-in.module.css';
+import styles from './reset.module.css';
 
-export function SignIn(): React.JSX.Element {
-  const [form, setForm] = useState({ email: '', password: '' });
+export function ResetPassword(): React.JSX.Element {
+  const dispatch = useAppDispatch();
+  const [form, setForm] = useState({ password: '', code: '' });
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
@@ -23,26 +26,34 @@ export function SignIn(): React.JSX.Element {
   };
 
   const onClick = (): void => {
-    console.log('Клик!');
+    dispatch(passwordReset(form))
+      .unwrap()
+      .then(() => {
+        console.log('Email sent!');
+      })
+      .catch((error) => {
+        console.error('passwordReset failed:', error);
+      });
   };
 
   return (
     <section className={styles.wrapper}>
       <div className={styles.container}>
-        <div className={`text text_type_main-medium mb-6`}>Вход</div>
+        <div className={`text text_type_main-large mb-6`}>Восстановление пароля</div>
         <form className={`${styles.form} mb-15`}>
+          <PasswordInput
+            icon="ShowIcon"
+            name="password"
+            onChange={onChange}
+            extraClass="mb-6"
+            placeholder="Введите новый пароль"
+            value={form.password}
+          />
           <Input
             extraClass="mb-6"
-            placeholder="E-mail"
-            name="email"
-            value={form.email}
-            onChange={onChange}
-          />
-          <PasswordInput
-            extraClass="mb-6"
-            placeholder="Пароль"
-            name="password"
-            value={form.password}
+            placeholder="Введите код из письма"
+            name="code"
+            value={form.code}
             onChange={onChange}
           />
           <Button
@@ -57,15 +68,9 @@ export function SignIn(): React.JSX.Element {
         </form>
 
         <div className={`text text_type_main-default text_color_inactive mt-6`}>
-          Вы — новый пользователь?
+          Вспомнили пароль?
           <Link className="ml-2" to="/login">
-            Зарегистрироваться
-          </Link>
-        </div>
-        <div className={`text text_type_main-default text_color_inactive mt-6`}>
-          Забыли пароль?
-          <Link className="ml-2" to="/login">
-            Восстановите пароль
+            Войти
           </Link>
         </div>
       </div>

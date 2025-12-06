@@ -21,6 +21,7 @@ const BurgerIngredientsGrid = ({
       <div className={styles.ingredients_grid}>
         {ingredients.map((ingr) => (
           <Link
+            style={{ textDecoration: 'none', color: 'white' }}
             key={ingr._id}
             to={`/ingredient/${ingr._id}`}
             state={{ backgroundLocation: location }}
