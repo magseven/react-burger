@@ -1,8 +1,7 @@
-import { useAppDispatch } from '@/services/store';
-import { passwordForgot } from '@/services/user/action';
+import { passwordReset } from '@/utils/api';
 import { Input, Button } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import type React from 'react';
 
@@ -10,19 +9,19 @@ import styles from './forgot-password.module.css';
 
 export function ForgotPassword(): React.JSX.Element {
   const [form, setForm] = useState({ email: '' });
-  const [emailSent, setEmailSent] = useState(false);
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const onClick = (): void => {
-    dispatch(passwordForgot(form))
-      .unwrap()
-      .then(() => {
-        console.log('Email sent!');
-        setEmailSent(true);
-      })
-      .catch((error) => {
-        console.error('passwordForgot failed:', error);
-      });
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    void (async (): Promise<void> => {
+      try {
+        e.preventDefault();
+
+        await passwordReset(form);
+        await navigate('/reset-password');
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    })();
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -38,27 +37,15 @@ export function ForgotPassword(): React.JSX.Element {
     <section className={styles.wrapper}>
       <div className={styles.container}>
         <div className={`text text_type_main-medium mb-6`}>Восстановление пароля</div>
-        <form className={`${styles.form} mb-15`}>
-          {emailSent === true ? (
-            <Input
-              name="email"
-              extraClass="mb-6"
-              placeholder="Укажите e-mail"
-              value={form.email}
-              onChange={onChange}
-            />
-          ) : (
-            <div className="text text_type_main-default mb-4">
-              Email отправлен, ждите!
-            </div>
-          )}
-          <Button
-            size="large"
-            type="primary"
-            htmlType={'button'}
-            extraClass={'mb-15'}
-            onClick={onClick}
-          >
+        <form className={`${styles.form} mb-15`} onSubmit={onSubmit}>
+          <Input
+            name="email"
+            extraClass="mb-6"
+            placeholder="Укажите e-mail"
+            value={form.email}
+            onChange={onChange}
+          />
+          <Button size="large" type="primary" htmlType={'submit'} extraClass={'mb-15'}>
             Сохранить
           </Button>
         </form>

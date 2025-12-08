@@ -30,7 +30,7 @@ export const AppHeader = (): React.JSX.Element => {
             )}
           </NavLink>
           <NavLink
-            to="/"
+            to="/orders"
             className={({ isActive }) =>
               `${styles.link} ${isActive ? styles.link_active : ''}`
             }
@@ -38,22 +38,10 @@ export const AppHeader = (): React.JSX.Element => {
             {({ isActive }) => (
               <div className={`${styles.iconTextWrapper} ml-10`}>
                 <ListIcon type={isActive ? 'primary' : 'secondary'} />
-                <p className={`${styles.link} text text_type_main-default ml-2`}>
-                  Лента заказов
-                </p>
+                <p className={`text text_type_main-default ml-2`}>Лента заказов</p>
               </div>
             )}
           </NavLink>
-
-          {/* Тут должны быть ссылки, а не например кнопки или абзацы */}
-          {/* <a href="/" className={`${styles.link} ${styles.link_active}`}>
-            <BurgerIcon type="primary" />
-            <p className="text text_type_main-default ml-2">Конструктор</p>
-          </a>
-          <a href="/feed" className={`${styles.link} ml-10`}>
-            <ListIcon type="secondary" />
-            <p className="text text_type_main-default ml-2">Лента заказов</p>
-          </a> */}
         </div>
         <div className={styles.logo}>
           <Logo />

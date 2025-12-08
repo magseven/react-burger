@@ -25,14 +25,14 @@ export function Register(): React.JSX.Element {
     }));
   };
 
-  const onClick = (): void => {
+  const onSubmit = (): void => {
     dispatch(register(form))
       .unwrap()
       .then(() => {
-        console.log('Login successful!');
+        console.log('Register successful!');
       })
       .catch((error) => {
-        console.error('Login failed:', error);
+        console.error('Register failed:', error);
       });
   };
 
@@ -40,7 +40,7 @@ export function Register(): React.JSX.Element {
     <section className={styles.wrapper}>
       <div className={styles.container}>
         <div className={`text text_type_main-large mb-6`}>Регистрация</div>
-        <form className={`${styles.form} mb-15`}>
+        <form className={`${styles.form} mb-15`} onSubmit={onSubmit}>
           <Input
             extraClass="mb-6"
             name="name"
@@ -62,13 +62,7 @@ export function Register(): React.JSX.Element {
             value={form.password}
             onChange={onChange}
           />
-          <Button
-            onClick={onClick}
-            size="large"
-            type="primary"
-            htmlType={'button'}
-            extraClass={'mb-15'}
-          >
+          <Button size="large" type="primary" htmlType="submit" extraClass={'mb-15'}>
             Зарегистрироваться
           </Button>
         </form>

@@ -269,13 +269,17 @@ export const passwordReset = async (data: { email: string }): Promise<ResetRespo
 
 export const passwordReset2 = async (data: {
   password: string;
-  code: string;
+  token: string;
 }): Promise<ResetResponse> => {
   try {
+    if (!data.token) {
+      throw new Error('Токен не найден. Пожалуйста, авторизуйтесь.');
+    }
     const res = await fetch(`${BASE_URL}/password-reset/reset`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        token: data.token,
       },
       body: JSON.stringify(data),
     });

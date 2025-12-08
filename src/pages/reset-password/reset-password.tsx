@@ -1,20 +1,19 @@
-import { useAppDispatch } from '@/services/store';
-import { passwordReset } from '@/services/user/action';
+import { passwordReset2 } from '@/utils/api';
 import {
   Input,
   PasswordInput,
   Button,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import type React from 'react';
 
 import styles from './reset.module.css';
 
 export function ResetPassword(): React.JSX.Element {
-  const dispatch = useAppDispatch();
-  const [form, setForm] = useState({ password: '', code: '' });
+  const [form, setForm] = useState({ password: '', token: '' });
+  const navigate = useNavigate();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
@@ -25,22 +24,17 @@ export function ResetPassword(): React.JSX.Element {
     }));
   };
 
-  const onClick = (): void => {
-    dispatch(passwordReset(form))
-      .unwrap()
-      .then(() => {
-        console.log('Email sent!');
-      })
-      .catch((error) => {
-        console.error('passwordReset failed:', error);
-      });
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    void passwordReset2(form);
+    void navigate('/login');
   };
 
   return (
     <section className={styles.wrapper}>
       <div className={styles.container}>
         <div className={`text text_type_main-large mb-6`}>Восстановление пароля</div>
-        <form className={`${styles.form} mb-15`}>
+        <form className={`${styles.form} mb-15`} onSubmit={onSubmit}>
           <PasswordInput
             icon="ShowIcon"
             name="password"
@@ -52,18 +46,12 @@ export function ResetPassword(): React.JSX.Element {
           <Input
             extraClass="mb-6"
             placeholder="Введите код из письма"
-            name="code"
-            value={form.code}
+            name="token"
+            value={form.token}
             onChange={onChange}
           />
-          <Button
-            onClick={onClick}
-            size="large"
-            type="primary"
-            htmlType={'button'}
-            extraClass={'mb-15'}
-          >
-            Войти
+          <Button size="large" type="primary" htmlType={'submit'} extraClass={'mb-15'}>
+            Сохранить
           </Button>
         </form>
 

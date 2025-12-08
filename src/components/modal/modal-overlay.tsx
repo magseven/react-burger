@@ -3,7 +3,7 @@ import type React from 'react';
 import styles from './modal-overlay.module.css';
 
 type TModalOverlayProps = {
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 const ModalOverlay = ({ onClick }: TModalOverlayProps): React.JSX.Element => {

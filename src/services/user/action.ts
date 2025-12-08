@@ -41,22 +41,6 @@ export const register = createAsyncThunk(
   }
 );
 
-export const passwordForgot = createAsyncThunk(
-  'user/passwordForgot',
-  async (data: { email: string }) => {
-    const res = await api.passwordReset(data);
-    return res.user;
-  }
-);
-
-export const passwordReset = createAsyncThunk(
-  'user/passwordReset2',
-  async (data: { password: string; code: string }) => {
-    const res = await api.passwordReset2(data);
-    return res.user;
-  }
-);
-
 export const userPatch = createAsyncThunk(
   'user/patch',
   async (data: { name: string; email: string; password: string }) => {

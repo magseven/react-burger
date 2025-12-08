@@ -10,22 +10,17 @@ import styles from './modal.module.css';
 
 type TModalProps = {
   isOpen: boolean;
-  onClick: () => void;
+  onClick?: () => void;
   title: string;
   children: React.ReactNode;
 };
 
-export const Modal = ({
-  isOpen,
-  onClick,
-  title,
-  children,
-}: TModalProps): React.JSX.Element => {
+const Modal = ({ isOpen, onClick, title, children }: TModalProps): React.JSX.Element => {
   const modalRoot = document.getElementById('react-modals');
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
-      if (e.key === 'Escape') onClick();
+      if (e.key === 'Escape') onClick?.();
     };
 
     document.addEventListener('keydown', handleKeyDown);

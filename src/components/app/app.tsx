@@ -20,7 +20,7 @@ import { Routes, Route, useLocation, useParams, useNavigate } from 'react-router
 
 import { AppHeader } from '@components/app-header/app-header';
 import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
-import { Modal } from '@components/modal/modal';
+import Modal from '@components/modal/modal';
 import { OrderDetails } from '@components/order-details/order-details';
 
 import { ProtectedRoute } from '../protected-route/protected-route';
@@ -104,14 +104,14 @@ export const App = (): React.JSX.Element => {
         />
         <Route path="/profile" element={<ProtectedRoute component={<Profile />} />}>
           <Route index element={<Account />} />
-          {/* <Route path='orders' element={<Home/>}/>   */}
+          <Route path="orders" element={<NotFound />} />
         </Route>
         <Route
           path="/forgotPassword"
           element={<ProtectedRoute onlyUnAuth component={<ForgotPassword />} />}
         />
         <Route
-          path="/resetPassword"
+          path="/reset-password"
           element={<ProtectedRoute onlyUnAuth component={<ResetPassword />} />}
         />
         <Route

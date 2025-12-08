@@ -18,6 +18,11 @@ export const orderApi = createApi({
       for (const [key, value] of Object.entries(orderApiConfig.headers)) {
         headers.set(key, value);
       }
+
+      const accessToken = localStorage.getItem('accessToken');
+      if (accessToken) {
+        headers.set('Authorization', accessToken);
+      }
       return headers;
     },
   }),
