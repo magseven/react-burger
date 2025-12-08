@@ -75,7 +75,7 @@ export function Login(): React.JSX.Element {
         </div>
         <div className={`text text_type_main-default text_color_inactive mt-6`}>
           Забыли пароль?
-          <Link className="ml-2" to="/forgotPassword">
+          <Link className="ml-2" to="/forgot-password">
             Восстановите пароль
           </Link>
         </div>

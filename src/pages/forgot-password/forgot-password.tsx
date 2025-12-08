@@ -17,6 +17,7 @@ export function ForgotPassword(): React.JSX.Element {
         e.preventDefault();
 
         await passwordReset(form);
+        localStorage.setItem('forgotPassword', 'true');
         await navigate('/reset-password');
       } catch (error) {
         console.error('Error:', error);

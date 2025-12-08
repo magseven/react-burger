@@ -1,6 +1,7 @@
 import { Account } from '@/pages/account/account';
 import { ForgotPassword } from '@/pages/forgot-password/forgot-password';
 import { Home } from '@/pages/home/home';
+import { IngredientPage } from '@/pages/ingredient/ingredient';
 import { Login } from '@/pages/login/login';
 import { NotFound } from '@/pages/not-found/not-found';
 import { Profile } from '@/pages/profile/profile';
@@ -16,13 +17,13 @@ import { useAppDispatch } from '@/services/store';
 import { checkUserAuth } from '@/services/user/action';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Routes, Route, useLocation, useParams, useNavigate } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 
 import { AppHeader } from '@components/app-header/app-header';
 import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
 import Modal from '@components/modal/modal';
-import { OrderDetails } from '@components/order-details/order-details';
 
+import { OrderDetails } from '../order-details/order-details';
 import { ProtectedRoute } from '../protected-route/protected-route';
 
 import type { TIngredient } from '@utils/types.ts';
@@ -34,24 +35,7 @@ type LocationState = {
   from?: {
     pathname?: string;
   };
-  [key: string]: unknown; // для других возможных полей
-};
-
-const IngredientPage = ({
-  ingredients,
-}: {
-  ingredients: TIngredient[];
-}): React.JSX.Element => {
-  const params = useParams<{ id: string }>();
-  const id = params.id;
-
-  if (!ingredients.length) return <div>Загружается список ингредиентов...</div>;
-
-  const ingredientShowDetails = ingredients.find((ing) => ing._id === id);
-
-  if (!ingredientShowDetails) return <div>Ингредиент не найден</div>;
-
-  return <IngredientDetails ingredient={ingredientShowDetails} />;
+  [key: string]: unknown;
 };
 
 export const App = (): React.JSX.Element => {
@@ -59,6 +43,7 @@ export const App = (): React.JSX.Element => {
   const state = location.state as { backgroundLocation?: Location };
 
   const dispatch = useAppDispatch();
+  const orderIsOpen = useSelector(selectOrderIsOpen);
 
   useEffect((): void => {
     void dispatch(checkUserAuth());
@@ -66,7 +51,6 @@ export const App = (): React.JSX.Element => {
 
   const { data, isLoading, error } = useGetIngredientsQuery();
   const selectedId = useSelector(selectSelectedId);
-  const orderIsOpen = useSelector(selectOrderIsOpen);
 
   const navigate = useNavigate();
 
@@ -107,12 +91,18 @@ export const App = (): React.JSX.Element => {
           <Route path="orders" element={<NotFound />} />
         </Route>
         <Route
-          path="/forgotPassword"
+          path="/forgot-password"
           element={<ProtectedRoute onlyUnAuth component={<ForgotPassword />} />}
         />
         <Route
           path="/reset-password"
-          element={<ProtectedRoute onlyUnAuth component={<ResetPassword />} />}
+          element={
+            localStorage.getItem('forgotPassword') === 'true' ? (
+              <ProtectedRoute onlyUnAuth component={<ResetPassword />} />
+            ) : (
+              <Navigate to="/forgot-password" replace />
+            )
+          }
         />
         <Route
           path="/login"
@@ -137,7 +127,6 @@ export const App = (): React.JSX.Element => {
           />
         </Routes>
       )}
-
       {orderIsOpen && (
         <Modal isOpen={true} onClick={handleCloseModal} title="">
           <OrderDetails />

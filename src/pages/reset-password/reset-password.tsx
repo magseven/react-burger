@@ -25,9 +25,14 @@ export function ResetPassword(): React.JSX.Element {
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    void passwordReset2(form);
-    void navigate('/login');
+    try {
+      e.preventDefault();
+      void passwordReset2(form);
+      localStorage.removeItem('forgotPassword');
+      void navigate('/login');
+    } catch (err: unknown) {
+      console.log('Ошибка восстановления пароля.', err);
+    }
   };
 
   return (
