@@ -1,33 +1,42 @@
+import { useForm } from '@/hooks/useForm';
 import { passwordReset2 } from '@/utils/api';
 import {
   Input,
   PasswordInput,
   Button,
 } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import type React from 'react';
 
 import styles from './reset.module.css';
 
+type ResetForm = {
+  password: string;
+  token: string;
+};
+
+const initialFormState: ResetForm = {
+  password: '',
+  token: '',
+};
+
 export function ResetPassword(): React.JSX.Element {
-  const [form, setForm] = useState({ password: '', token: '' });
   const navigate = useNavigate();
+  const { values, handleChange } = useForm<ResetForm>(initialFormState);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  useEffect(() => {
+    const isPasswordForgotten = localStorage.getItem('forgotPassword') === 'true';
+    if (!isPasswordForgotten) {
+      void navigate('/forgot-password', { replace: true });
+    }
+  }, [navigate]);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     try {
       e.preventDefault();
-      void passwordReset2(form);
+      void passwordReset2(values);
       localStorage.removeItem('forgotPassword');
       void navigate('/login');
     } catch (err: unknown) {
@@ -43,17 +52,17 @@ export function ResetPassword(): React.JSX.Element {
           <PasswordInput
             icon="ShowIcon"
             name="password"
-            onChange={onChange}
+            onChange={handleChange}
             extraClass="mb-6"
             placeholder="Введите новый пароль"
-            value={form.password}
+            value={values.password}
           />
           <Input
             extraClass="mb-6"
             placeholder="Введите код из письма"
             name="token"
-            value={form.token}
-            onChange={onChange}
+            value={values.token}
+            onChange={handleChange}
           />
           <Button size="large" type="primary" htmlType={'submit'} extraClass={'mb-15'}>
             Сохранить

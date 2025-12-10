@@ -1,7 +1,7 @@
 import { selectCtorCounter } from '@/services/ctor-ingredients/reducer';
+import { useAppSelector } from '@/services/store';
 import { CurrencyIcon, Counter } from '@krgaa/react-developer-burger-ui-components';
 import { useDrag } from 'react-dnd';
-import { useSelector } from 'react-redux';
 
 import { TabNames, ingredientName } from '@utils/const';
 
@@ -13,7 +13,7 @@ export const BurgerIngredient = ({
   ingredient,
   onIngredientClick,
 }: TBurgerIngredientProps): React.JSX.Element => {
-  const counters = useSelector(selectCtorCounter);
+  const counters = useAppSelector(selectCtorCounter);
 
   const [, dragRef] = useDrag(() => ({
     type: ingredient.type === TabNames.bun ? ingredient.type : ingredientName,

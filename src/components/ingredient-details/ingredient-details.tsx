@@ -1,15 +1,22 @@
-import type { TIngredientDetailsProps } from '@utils/types.ts';
+import { selectIngredientById } from '@/services/ingredients/reducer';
+import { useAppSelector } from '@/services/store';
+import { useParams } from 'react-router-dom';
 
 import styles from './ingredient-details.module.css';
 
-export const IngredientDetails = ({
-  ingredient,
-}: TIngredientDetailsProps): React.JSX.Element => {
+export const IngredientDetails = (): React.JSX.Element => {
+  const { id } = useParams();
+  const ingredientSelector = useAppSelector(selectIngredientById(id));
+
+  if (!ingredientSelector) return <div>Ингредиент не найден!</div>;
   return (
     <div className={styles.container}>
-      <img src={ingredient.image_large} alt={`Изображение ${ingredient.name}`} />
+      <img
+        src={ingredientSelector.image_large}
+        alt={`Изображение ${ingredientSelector.name}`}
+      />
       <div className={`text text_type_main-default ${styles.textCenter}`}>
-        {ingredient.name}
+        {ingredientSelector.name}
       </div>
 
       <div className={`${styles.macronutrients} ${styles.textCenter} mt-10 mb-10`}>
@@ -18,19 +25,19 @@ export const IngredientDetails = ({
             Калории, ккал
           </div>
           <div className="text text_type_digits-default text_color_inactive">
-            {ingredient.calories}
+            {ingredientSelector.calories}
           </div>
         </div>
         <div className={`${styles.macronutrient} ${styles.textCenter}`}>
           <div className="text text_type_main-small text_color_inactive">Белки, г</div>
           <div className="text text_type_digits-default text_color_inactive">
-            {ingredient.proteins}
+            {ingredientSelector.proteins}
           </div>
         </div>
         <div className={`${styles.macronutrient} ${styles.textCenter}`}>
           <div className="text text_type_main-small text_color_inactive">Жиры, г</div>
           <div className="text text_type_digits-default text_color_inactive">
-            {ingredient.fat}
+            {ingredientSelector.fat}
           </div>
         </div>
         <div className={`${styles.macronutrient} ${styles.textCenter}`}>
@@ -38,7 +45,7 @@ export const IngredientDetails = ({
             Углеводы, г
           </div>
           <div className="text text_type_digits-default text_color_inactive">
-            {ingredient.carbohydrates}
+            {ingredientSelector.carbohydrates}
           </div>
         </div>
       </div>

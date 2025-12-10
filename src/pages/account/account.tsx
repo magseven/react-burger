@@ -1,63 +1,90 @@
-import { useAppDispatch } from '@/services/store';
+import { useForm } from '@/hooks/useForm';
+import { useAppDispatch, useAppSelector } from '@/services/store';
 import { userPatch } from '@/services/user/action';
 import { selectUser } from '@/services/user/reducer';
 import { Button, Input } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import type { FormEvent } from 'react';
 import type React from 'react';
 
 import styles from './account.module.css';
 
+type UserForm = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 export function Account(): React.JSX.Element {
   const dispatch = useAppDispatch();
-  const userSelector = useSelector(selectUser);
-  const [form, setForm] = useState(userSelector ?? { name: '', email: '' });
+  const userSelector = useAppSelector(selectUser);
+
+  const { values, handleChange, setValues } = useForm<UserForm>({
+    name: userSelector?.name ?? '',
+    email: userSelector?.email ?? '',
+    password: '',
+  });
+
   const [nameDisabled, setNameDisabled] = useState(true);
   const [emailDisabled, setEmailDisabled] = useState(true);
   const [passDisabled, setPassDisabled] = useState(true);
-  const [password, setPassword] = useState('');
-
-  const reset = (): void => {
-    setNameDisabled(true);
-    setEmailDisabled(true);
-    setPassDisabled(true);
-    setPassword('');
-    setForm(userSelector ?? { name: '', email: '' });
-  };
 
   useEffect(() => {
     if (userSelector) {
-      reset();
+      setValues({
+        name: userSelector.name || '',
+        email: userSelector.email || '',
+        password: '',
+      });
+      setNameDisabled(true);
+      setEmailDisabled(true);
+      setPassDisabled(true);
     }
-  }, [userSelector]);
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-
-    if (name === 'password') setPassword(value);
-    else
-      setForm((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-  };
+  }, [userSelector, setValues]);
 
   const isDirty = useMemo(
     () =>
-      password !== '' ||
-      form.name !== userSelector?.name ||
-      form.email !== userSelector.email,
-    [password, form, userSelector]
+      values.password !== '' ||
+      values.name !== userSelector?.name ||
+      values.email !== userSelector?.email,
+    [values, userSelector]
   );
 
   const onSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    dispatch(userPatch({ ...form, password })).catch((error) => {
-      console.error('Ошибка сохранения данных:', error);
+    dispatch(
+      userPatch({
+        name: values.name,
+        email: values.email,
+        password: values.password || '',
+      })
+    )
+      .unwrap()
+      .then(() => {
+        setValues((prev) => ({
+          ...prev,
+          password: '',
+        }));
+        setNameDisabled(true);
+        setEmailDisabled(true);
+        setPassDisabled(true);
+      })
+      .catch((error) => {
+        console.error('Ошибка сохранения данных:', error);
+      });
+  };
+
+  const handleCancel = (): void => {
+    setValues({
+      name: userSelector?.name ?? '',
+      email: userSelector?.email ?? '',
+      password: '',
     });
+    setNameDisabled(true);
+    setEmailDisabled(true);
+    setPassDisabled(true);
   };
 
   return (
@@ -67,8 +94,8 @@ export function Account(): React.JSX.Element {
           extraClass="mb-6"
           placeholder="Имя"
           name="name"
-          value={form?.name ?? ''}
-          onChange={onChange}
+          value={values.name}
+          onChange={handleChange}
           icon={!nameDisabled ? 'CloseIcon' : 'EditIcon'}
           disabled={nameDisabled}
           onIconClick={() => setNameDisabled(!nameDisabled)}
@@ -78,8 +105,8 @@ export function Account(): React.JSX.Element {
           placeholder="E-mail"
           name="email"
           type="email"
-          value={form?.email ?? ''}
-          onChange={onChange}
+          value={values.email}
+          onChange={handleChange}
           icon={!emailDisabled ? 'CloseIcon' : 'EditIcon'}
           disabled={emailDisabled}
           onIconClick={() => setEmailDisabled(!emailDisabled)}
@@ -89,8 +116,8 @@ export function Account(): React.JSX.Element {
           placeholder="Пароль"
           type="password"
           name="password"
-          value={password}
-          onChange={onChange}
+          value={values.password}
+          onChange={handleChange}
           icon={!passDisabled ? 'CloseIcon' : 'EditIcon'}
           disabled={passDisabled}
           onIconClick={() => setPassDisabled(!passDisabled)}
@@ -102,7 +129,7 @@ export function Account(): React.JSX.Element {
               type="secondary"
               extraClass={'mb-15'}
               htmlType="button"
-              onClick={reset}
+              onClick={handleCancel}
             >
               Отмена
             </Button>

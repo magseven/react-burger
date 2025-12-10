@@ -3,29 +3,27 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ctorSlice } from './ctor-ingredients/reducer';
 import { ingredientDetailsSlice } from './ingredient-details/reducer';
-import { ingredientsApi } from './ingredients/api';
-import { orderApi } from './order/api';
+import { ingredientsSlice } from './ingredients/reducer';
 import { orderModalSlice } from './order/orderModalSlice';
+import { orderSlice } from './order/reducer';
 import { userSlice } from './user/reducer';
 
 import type { AppDispatch } from './types';
 
 export const rootReducer = combineSlices(
-  ingredientsApi,
+  ingredientsSlice,
   ingredientDetailsSlice,
-  orderApi,
   ctorSlice,
   orderModalSlice,
-  userSlice
+  userSlice,
+  orderSlice
 );
 
 export const store = configureStoreRTK({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(ingredientsApi.middleware, orderApi.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(),
 });
 
-// export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppDispatch = (): AppDispatch => useDispatch<AppDispatch>();
 
 export const useAppSelector: typeof useSelector = useSelector;

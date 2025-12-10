@@ -56,16 +56,16 @@ export const ctorSlice = createSlice({
 
   selectors: {
     selectBun: (state) => state.bun,
-    selectIngredients: (state) => state.ingredients,
+    selectCtorIngredients: (state) => state.ingredients,
   },
 });
 
-export const { selectBun, selectIngredients } = ctorSlice.selectors;
+export const { selectBun, selectCtorIngredients } = ctorSlice.selectors;
 export const { addBun, addIngredient, deleteIngredient, clearOrder, reorderIngredient } =
   ctorSlice.actions;
 
 export const selectCtorCounter = createSelector(
-  [selectIngredients, selectBun],
+  [selectCtorIngredients, selectBun],
   (items, bun) => {
     return items.reduce(
       (acc, ingr) => {

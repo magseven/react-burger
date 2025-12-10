@@ -1,37 +1,31 @@
+import { useForm } from '@/hooks/useForm';
 import { passwordReset } from '@/utils/api';
 import { Input, Button } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import type React from 'react';
 
 import styles from './forgot-password.module.css';
 
+type ForgotPasswordForm = {
+  email: string;
+};
+
 export function ForgotPassword(): React.JSX.Element {
-  const [form, setForm] = useState({ email: '' });
   const navigate = useNavigate();
+  const { values, handleChange } = useForm<ForgotPasswordForm>({ email: '' });
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    void (async (): Promise<void> => {
-      try {
-        e.preventDefault();
+    e.preventDefault();
 
-        await passwordReset(form);
+    passwordReset({ email: values.email })
+      .then(() => {
         localStorage.setItem('forgotPassword', 'true');
-        await navigate('/reset-password');
-      } catch (error) {
+        void navigate('/reset-password');
+      })
+      .catch((error) => {
         console.error('Error:', error);
-      }
-    })();
-  };
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+      });
   };
 
   return (
@@ -43,11 +37,11 @@ export function ForgotPassword(): React.JSX.Element {
             name="email"
             extraClass="mb-6"
             placeholder="Укажите e-mail"
-            value={form.email}
-            onChange={onChange}
+            value={values.email}
+            onChange={handleChange}
           />
           <Button size="large" type="primary" htmlType={'submit'} extraClass={'mb-15'}>
-            Сохранить
+            Восстановить
           </Button>
         </form>
 

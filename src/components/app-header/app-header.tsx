@@ -1,3 +1,4 @@
+import { useAppSelector } from '@/services/store';
 import { selectUser } from '@/services/user/reducer';
 import {
   BurgerIcon,
@@ -5,13 +6,12 @@ import {
   Logo,
   ProfileIcon,
 } from '@krgaa/react-developer-burger-ui-components';
-import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 import styles from './app-header.module.css';
 
 export const AppHeader = (): React.JSX.Element => {
-  const userSelector = useSelector(selectUser);
+  const userSelector = useAppSelector(selectUser);
   return (
     <header className={styles.header}>
       <nav className={`${styles.menu} p-4`}>
@@ -43,9 +43,9 @@ export const AppHeader = (): React.JSX.Element => {
             )}
           </NavLink>
         </div>
-        <div className={styles.logo}>
+        <NavLink to="/" className={styles.logo}>
           <Logo />
-        </div>
+        </NavLink>
         <NavLink
           to="/profile"
           className={({ isActive }) =>

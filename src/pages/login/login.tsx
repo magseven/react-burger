@@ -1,10 +1,10 @@
+import { useForm } from '@/hooks/useForm';
 import { useAppDispatch } from '@/services/store';
 import {
   Input,
   Button,
   PasswordInput,
 } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { login } from '@services/user/action';
@@ -14,26 +14,25 @@ import type React from 'react';
 
 import styles from './login.module.css';
 
+type LoginForm = {
+  email: string;
+  password: string;
+};
+
 export function Login(): React.JSX.Element {
   const dispatch = useAppDispatch();
 
-  const [form, setForm] = useState({ email: '', password: '' });
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const { values, handleChange } = useForm<LoginForm>({
+    email: '',
+    password: '',
+  });
 
   const onSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
     console.log('Войти!');
 
-    dispatch(login(form))
+    dispatch(login(values))
       .unwrap()
       .then(() => {
         console.log('Login successful!');
@@ -52,15 +51,15 @@ export function Login(): React.JSX.Element {
             extraClass="mb-6"
             placeholder="E-mail"
             name="email"
-            value={form.email}
-            onChange={onChange}
+            value={values.email}
+            onChange={handleChange}
           />
           <PasswordInput
             extraClass="mb-6"
             placeholder="Пароль"
             name="password"
-            value={form.password}
-            onChange={onChange}
+            value={values.password}
+            onChange={handleChange}
           />
           <Button size="large" type="primary" extraClass={'mb-15'} htmlType="submit">
             Войти

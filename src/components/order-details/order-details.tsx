@@ -1,11 +1,11 @@
 import { selectOrderNumber } from '@/services/order/orderModalSlice';
+import { useAppSelector } from '@/services/store';
 import { CheckMarkIcon } from '@krgaa/react-developer-burger-ui-components';
-import { useSelector } from 'react-redux';
 
 import styles from './order-details.module.css';
 
 export const OrderDetails = (): React.JSX.Element => {
-  const orderNumber = useSelector(selectOrderNumber);
+  const orderNumber = useAppSelector(selectOrderNumber);
 
   return (
     <>

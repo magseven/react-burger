@@ -23,7 +23,6 @@ export function Profile(): React.JSX.Element {
       });
   };
 
-  // Функция для определения классов ссылок
   const getNavLinkClass = ({ isActive }: { isActive: boolean }): string => {
     return `${styles.link} text text_type_main-medium ${isActive ? styles.link_active : 'text_color_inactive'}`;
   };
@@ -31,11 +30,7 @@ export function Profile(): React.JSX.Element {
   return (
     <section className={styles.profileSection}>
       <div className={styles.leftColumn}>
-        <NavLink
-          to="/profile"
-          className={getNavLinkClass}
-          end // Важно для точного совпадения пути
-        >
+        <NavLink to="/profile" className={getNavLinkClass} end>
           <p className="ml-2">Профиль</p>
         </NavLink>
 

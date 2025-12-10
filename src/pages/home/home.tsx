@@ -1,14 +1,15 @@
 import Modal from '@/components/modal/modal';
 import { OrderLoading } from '@/components/order-details/order-loading';
-import { selectBun, selectIngredients } from '@/services/ctor-ingredients/reducer';
+import { selectBun, selectCtorIngredients } from '@/services/ctor-ingredients/reducer';
 import { selectIngredient } from '@/services/ingredient-details/reducer';
-import { useGetIngredientsQuery } from '@/services/ingredients/api';
-import { usePostOrderMutation } from '@/services/order/api';
+import { selectAllIngredients } from '@/services/ingredients/reducer';
+import { postOrder } from '@/services/order/action';
 import { closeOrderModal, openOrderModal } from '@/services/order/orderModalSlice';
+import { selectIsOrderLoading } from '@/services/order/reducer';
+import { useAppDispatch, useAppSelector } from '@/services/store';
 import { selectUser } from '@/services/user/reducer';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
@@ -20,23 +21,22 @@ import type { TIngredient } from '@utils/types.ts';
 import styles from './home.module.css';
 
 export const Home = (): React.JSX.Element => {
-  const { data, isLoading: loading, error } = useGetIngredientsQuery();
-  const [postOrder, { isLoading: isOrderLoading }] = usePostOrderMutation();
-
   const navigate = useNavigate();
 
-  const dispatch = useDispatch();
-  const userSelector = useSelector(selectUser);
+  const dispatch = useAppDispatch();
+  const userSelector = useAppSelector(selectUser);
 
-  const bun = useSelector(selectBun);
-  const ctorIngredients = useSelector(selectIngredients);
+  const bun = useAppSelector(selectBun);
+  const ctorIngredients = useAppSelector(selectCtorIngredients);
 
   const handleIngredientClick = (ingredient: TIngredient): void => {
     dispatch(selectIngredient(ingredient._id));
   };
 
+  const ingredients = useAppSelector(selectAllIngredients);
+  const isOrderLoading = useAppSelector(selectIsOrderLoading);
+
   const handleOrderClick = async (): Promise<void> => {
-    //setIsModalOpen(true);
     try {
       if (!userSelector) {
         void navigate('/login');
@@ -50,9 +50,9 @@ export const Home = (): React.JSX.Element => {
         ],
       };
 
-      const result = await postOrder(orderData).unwrap();
+      const orderResponse = await dispatch(postOrder(orderData)).unwrap();
 
-      dispatch(openOrderModal(result.order.number));
+      dispatch(openOrderModal(orderResponse.number));
     } catch (err: unknown) {
       dispatch(closeOrderModal());
       if (err instanceof Error) {
@@ -62,23 +62,6 @@ export const Home = (): React.JSX.Element => {
       }
     }
   };
-
-  if (loading) {
-    return <div>Загружается список ингредиентов...</div>;
-  }
-
-  if (error) {
-    if ('data' in error) {
-      console.log('Error:', error.data);
-      return <div>Error...</div>;
-    } else {
-      console.log('Error:', error);
-      return <div>Error...</div>;
-    }
-  }
-
-  const ingredients: TIngredient[] = data?.data ?? [];
-
   return (
     <>
       <DndProvider backend={HTML5Backend}>

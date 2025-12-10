@@ -1,3 +1,4 @@
+import { useForm } from '@/hooks/useForm';
 import { useAppDispatch } from '@/services/store';
 import { register } from '@/services/user/action';
 import {
@@ -5,31 +6,41 @@ import {
   Button,
   PasswordInput,
 } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
+import type { FormEvent } from 'react';
 import type React from 'react';
 
 import styles from './register.module.css';
 
+type RegisterForm = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 export function Register(): React.JSX.Element {
   const dispatch = useAppDispatch();
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const navigate = useNavigate();
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
+  const { values, handleChange } = useForm<RegisterForm>({
+    name: '',
+    email: '',
+    password: '',
+  });
 
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const onSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
 
-  const onSubmit = (): void => {
-    dispatch(register(form))
+    if (!values.name.trim() || !values.email.trim() || !values.password.trim()) {
+      console.error('Все поля обязательны для заполнения');
+      return;
+    }
+
+    dispatch(register(values))
       .unwrap()
       .then(() => {
-        console.log('Register successful!');
+        void navigate('/');
       })
       .catch((error) => {
         console.error('Register failed:', error);
@@ -45,24 +56,32 @@ export function Register(): React.JSX.Element {
             extraClass="mb-6"
             name="name"
             placeholder="Имя"
-            value={form.name}
-            onChange={onChange}
+            value={values.name}
+            onChange={handleChange}
           />
           <Input
             extraClass="mb-6"
             name="email"
             placeholder="E-mail"
-            value={form.email}
-            onChange={onChange}
+            value={values.email}
+            onChange={handleChange}
           />
           <PasswordInput
             extraClass="mb-6"
             name="password"
             placeholder="Пароль"
-            value={form.password}
-            onChange={onChange}
+            value={values.password}
+            onChange={handleChange}
           />
-          <Button size="large" type="primary" htmlType="submit" extraClass={'mb-15'}>
+          <Button
+            size="large"
+            type="primary"
+            htmlType="submit"
+            extraClass={'mb-15'}
+            disabled={
+              !values.name.trim() || !values.email.trim() || !values.password.trim()
+            }
+          >
             Зарегистрироваться
           </Button>
         </form>

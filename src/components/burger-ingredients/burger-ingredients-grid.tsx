@@ -1,5 +1,6 @@
-import { selectIngredientsByType } from '@/services/ingredients/api';
-import { useSelector } from 'react-redux';
+import { selectIngredientsByType } from '@/services/ingredients/reducer';
+import { useAppSelector } from '@/services/store';
+import { shallowEqual } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
 import { BurgerIngredient } from './burger-ingredient';
@@ -13,7 +14,7 @@ const BurgerIngredientsGrid = ({
   type,
   onIngredientClick,
 }: TBurgerIngredientsGridProps): React.JSX.Element => {
-  const ingredients = useSelector(selectIngredientsByType(type));
+  const ingredients = useAppSelector(selectIngredientsByType(type), shallowEqual);
   const location = useLocation();
   return (
     <div className="mt-5 mb-5">
