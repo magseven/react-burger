@@ -1,11 +1,11 @@
-import { createSelector } from '@reduxjs/toolkit';
+//import { createSelector } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import BASE_URL from '../../utils/config-api';
 
-import type { RootState } from '../types';
+//import type { RootState } from '../types';
 import type { TIngredientsResponse } from './types';
-import type { TIngredient } from '@/utils/types';
+//import type { TIngredient } from '@/utils/types';
 
 export const ingredientsApiConfig = {
   baseUrl: BASE_URL,
@@ -32,13 +32,22 @@ export const ingredientsApi = createApi({
   }),
 });
 
-const selectIngredientsResult = ingredientsApi.endpoints.getIngredients.select();
+// const selectIngredients = ingredientsApi.endpoints.getIngredients.select();
 
-export const selectIngredientsByType = (
-  type: string
-): ((state: RootState) => TIngredient[]) =>
-  createSelector(selectIngredientsResult, (result): TIngredient[] =>
-    (result.data?.data ?? []).filter((ingr) => ingr.type === type)
-  );
+// export const selectIngredientsByType = (
+//   type: string
+// ): ((state: RootState) => TIngredient[]) =>
+//   createSelector(selectIngredients, (result): TIngredient[] =>
+//     (result.data?.data ?? []).filter((ingr) => ingr.type === type)
+//   );
 
-export const { useGetIngredientsQuery } = ingredientsApi;
+// export const selectIngredientById = (
+//   id?: string
+// ): ((state: RootState) => TIngredient | null) =>
+//   createSelector(selectIngredients, (result): TIngredient | null => {
+//     if (!id) return null;
+//     const ingredients = result.data?.data ?? [];
+//     return ingredients.find((ingr) => ingr._id === id) ?? null;
+//   });
+
+// export const { useGetIngredientsQuery } = ingredientsApi;

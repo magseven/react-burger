@@ -25,14 +25,13 @@
   color: var(--text-primary-color);
 }
 
-.link_position_last {
-  display: flex;
-  flex-basis: 35%;
-  justify-content: flex-end;
-}
-
 .logo {
   display: flex;
   align-items: center;
   margin: 0 auto;
+}
+
+.iconTextWrapper {
+  display: flex;
+  align-items: center; /* выравнивание иконки и текста по вертикали */
 }

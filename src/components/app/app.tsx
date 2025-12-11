@@ -1,117 +1,142 @@
+import { Account } from '@/pages/account/account';
+import { ForgotPassword } from '@/pages/forgot-password/forgot-password';
+import { Home } from '@/pages/home/home';
+import { Login } from '@/pages/login/login';
+import { NotFound } from '@/pages/not-found/not-found';
+import { Profile } from '@/pages/profile/profile';
+import { Register } from '@/pages/register/register';
+import { ResetPassword } from '@/pages/reset-password/reset-password';
+import { clearOrder } from '@/services/ctor-ingredients/reducer';
+import { clearIngredient } from '@/services/ingredient-details/reducer';
+import { getIngredients } from '@/services/ingredients/action';
 import {
-  clearOrder,
-  selectBun,
-  selectIngredients,
-} from '@/services/ctor-ingredients/reducer';
-import {
-  selectIngredient,
-  clearIngredient,
-  selectSelectedId,
-} from '@/services/ingredient-details/reducer';
-import { useGetIngredientsQuery } from '@/services/ingredients/api';
-import { usePostOrderMutation } from '@/services/order/api';
-import {
-  closeOrderModal,
-  openOrderModal,
-  selectOrderIsOpen,
-} from '@/services/order/orderModalSlice';
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+  selectIngredientsError,
+  selectIngredientsLoading,
+} from '@/services/ingredients/reducer';
+import { closeOrderModal, selectOrderIsOpen } from '@/services/order/orderModalSlice';
+import { useAppDispatch, useAppSelector } from '@/services/store';
+import { checkUserAuth } from '@/services/user/action';
+import { useCallback, useEffect } from 'react';
+import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 
 import { AppHeader } from '@components/app-header/app-header';
-import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
-import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
 import { IngredientDetails } from '@components/ingredient-details/ingredient-details';
-import { Modal } from '@components/modal/modal';
-import { OrderDetails } from '@components/order-details/order-details';
+import Modal from '@components/modal/modal';
 
-import type { TOrderRequest } from '@/services/order/types';
-import type { TIngredient } from '@utils/types.ts';
+import { OrderDetails } from '../order-details/order-details';
+import { ProtectedRoute } from '../protected-route/protected-route';
+
+import type React from 'react';
 
 import styles from './app.module.css';
 
+type LocationState = {
+  from?: {
+    pathname?: string;
+  };
+  [key: string]: unknown;
+};
+
 export const App = (): React.JSX.Element => {
-  const { data, isLoading: loading, error } = useGetIngredientsQuery();
-  const [postOrder, { isLoading: orderLoading }] = usePostOrderMutation();
+  const location = useLocation();
+  const state = location.state as { backgroundLocation?: Location };
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const orderIsOpen = useAppSelector(selectOrderIsOpen);
 
-  const selectedId = useSelector(selectSelectedId);
-  const orderIsOpen = useSelector(selectOrderIsOpen);
-  const bun = useSelector(selectBun);
-  const ctorIngredients = useSelector(selectIngredients);
+  const isLoading = useAppSelector(selectIngredientsLoading);
+  const error = useAppSelector(selectIngredientsError);
 
-  const handleIngredientClick = (ingredient: TIngredient): void => {
-    dispatch(selectIngredient(ingredient._id));
-  };
-
-  const handleOrderClick = async (): Promise<void> => {
-    try {
-      const orderData: TOrderRequest = {
-        ingredients: [
-          ...(bun ? [bun._id] : []),
-          ...ctorIngredients.map((i) => i._id),
-          ...(bun ? [bun._id] : []),
-        ],
-      };
-
-      const result = await postOrder(orderData).unwrap();
-      dispatch(openOrderModal(result.order.number));
-    } catch (err: unknown) {
-      dispatch(closeOrderModal());
-      if (err instanceof Error) {
-        console.error('Ошибка при создании заказа:', err.message);
-      } else {
-        console.error('Неизвестная ошибка при создании заказа', err);
-      }
-    }
-  };
-
-  const handleCloseModal = useCallback(() => {
-    dispatch(clearIngredient());
-    dispatch(closeOrderModal());
-    dispatch(clearOrder());
+  useEffect((): void => {
+    void dispatch(checkUserAuth());
   }, []);
 
-  if (loading) {
-    return <div>Загружается список ингредиентов...</div>;
-  }
+  useEffect(() => {
+    void dispatch(getIngredients());
+  }, []);
 
-  if (error) {
-    if ('data' in error) {
-      console.log('Error:', error.data);
-      return <div>Error...</div>;
-    } else {
-      console.log('Error:', error);
-      return <div>Error...</div>;
-    }
-  }
+  const navigate = useNavigate();
 
-  const ingredients: TIngredient[] = data?.data ?? [];
-  const ingredientShowDetails = ingredients?.find((ingr) => ingr._id === selectedId);
+  const handleCloseModal = useCallback(
+    (isOrder: boolean): void => {
+      dispatch(clearIngredient());
+
+      if (isOrder) dispatch(closeOrderModal());
+
+      const state = location.state as LocationState | null | undefined;
+      const possiblePathname = state?.from?.pathname;
+      const targetPath = typeof possiblePathname === 'string' ? possiblePathname : '/';
+
+      dispatch(clearOrder());
+      void navigate(targetPath);
+    },
+    [dispatch, location, navigate]
+  );
+
+  if (isLoading) return <div>Загружается список ингредиентов...</div>;
+  if (error) return <div>Ошибка загрузки ингредиентов ...</div>;
 
   return (
     <div className={styles.app}>
       <AppHeader />
-      <h1 className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
-        Соберите бургер
-      </h1>
-      <main className={`${styles.main} pl-5 pr-5`}>
-        <BurgerIngredients onIngredientClick={handleIngredientClick} />
-        {ingredients?.[0] && (
-          <BurgerConstructor
-            orderLoading={orderLoading}
-            onOrderClick={() => void handleOrderClick()}
+
+      <Routes location={state?.backgroundLocation ?? location}>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/ingredient/:id"
+          element={
+            <div className={styles.details}>
+              <IngredientDetails />
+            </div>
+          }
+        />
+        <Route path="/profile" element={<ProtectedRoute component={<Profile />} />}>
+          <Route index element={<Account />} />
+          <Route path="orders" element={<NotFound />} />
+        </Route>
+        <Route
+          path="/forgot-password"
+          element={<ProtectedRoute onlyUnAuth component={<ForgotPassword />} />}
+        />
+        <Route
+          path="/reset-password"
+          element={
+            localStorage.getItem('forgotPassword') === 'true' ? (
+              <ProtectedRoute onlyUnAuth component={<ResetPassword />} />
+            ) : (
+              <Navigate to="/forgot-password" replace />
+            )
+          }
+        />
+        <Route
+          path="/login"
+          element={<ProtectedRoute onlyUnAuth component={<Login />} />}
+        />
+        <Route
+          path="/register"
+          element={<ProtectedRoute onlyUnAuth component={<Register />} />}
+        />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+
+      {state?.backgroundLocation && (
+        <Routes>
+          <Route
+            path="/ingredient/:id"
+            element={
+              <Modal
+                isOpen={true}
+                onClick={() => handleCloseModal(false)}
+                title="Детали ингредиента"
+              >
+                <IngredientDetails />
+              </Modal>
+            }
           />
-        )}
-      </main>
-      {ingredientShowDetails && (
-        <Modal isOpen={true} onClick={handleCloseModal} title="Детали ингредиента">
-          <IngredientDetails ingredient={ingredientShowDetails} />
-        </Modal>
+        </Routes>
       )}
       {orderIsOpen && (
-        <Modal isOpen={true} onClick={handleCloseModal} title="">
+        <Modal isOpen={true} onClick={() => handleCloseModal(true)} title="">
           <OrderDetails />
         </Modal>
       )}

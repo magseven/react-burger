@@ -1,0 +1,47 @@
+.profileSection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 60px;
+  max-width: 1240px;
+  height: 100vh;
+  margin: 0 auto;
+  padding-top: 120px;
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 320px;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 400px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  height: 64px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.link:hover {
+  opacity: 0.8;
+}
+
+.link_active {
+  color: var(--text-primary-color);
+}
+
+.infoText {
+  height: 20px;
+  margin-top: 80px;
+  line-height: 24px;
+  opacity: 0.4;
+}

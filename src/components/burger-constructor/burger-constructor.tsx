@@ -1,17 +1,17 @@
 import {
-  selectIngredients,
+  selectCtorIngredients,
   selectBun,
   addBun,
   addIngredient,
   deleteIngredient,
 } from '@/services/ctor-ingredients/reducer';
+import { useAppSelector, useAppDispatch } from '@/services/store';
 import {
   ConstructorElement,
   CurrencyIcon,
   Button,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useMemo, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 
 import { bunTopText, bunBottomText, TabNames } from '@utils/const';
 
@@ -32,8 +32,8 @@ export const BurgerConstructor = ({
   onOrderClick,
 }: TBurgerConstructorProps): React.JSX.Element => {
   const [bunTargetHovered, setBunTargetHovered] = useState(false);
-  const ingredients = useSelector(selectIngredients);
-  const bun = useSelector(selectBun);
+  const ingredients = useAppSelector(selectCtorIngredients);
+  const bun = useAppSelector(selectBun);
 
   useEffect(() => {
     if (bun) setBunTargetHovered(false);
@@ -44,7 +44,7 @@ export const BurgerConstructor = ({
     [ingredients, bun]
   );
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleDrop = (ingredient: TIngredient): void => {
     if (ingredient.type === TabNames.bun) dispatch(addBun(ingredient));

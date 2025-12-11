@@ -1,25 +1,16 @@
 import { reorderIngredient } from '@/services/ctor-ingredients/reducer';
+import { useAppDispatch } from '@/services/store';
 import {
   ConstructorElement,
   DragIcon,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { useDispatch } from 'react-redux';
 
 import type { Identifier, XYCoord } from 'dnd-core';
-// import { ItemTypes } from './ItemTypes';
 import type { FC } from 'react';
 
 import styles from './sortable-ingredient.module.css';
-
-// const style = {
-//   border: '1px dashed gray',
-//   padding: '0.5rem 1rem',
-//   marginBottom: '.5rem',
-//   backgroundColor: 'white',
-//   cursor: 'move',
-// };
 
 export type SortableIngredientProps = {
   id: string;
@@ -44,7 +35,7 @@ export const SortableIngredient: FC<SortableIngredientProps> = ({
   ...propsIngredient
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [{ handlerId }, drop] = useDrop<
     DragItem,
     void,
