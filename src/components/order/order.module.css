@@ -1,0 +1,64 @@
+.frame {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 24px;
+  background: #1c1c21;
+  border-radius: 40px;
+}
+
+.order_num_data {
+  display: flex;
+  justify-content: space-between;
+
+  /* gap: 24px; */
+}
+
+.ingredients {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.images {
+  display: flex;
+  align-items: center;
+}
+
+.ingredient_img {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 64px; /* нужный размер */
+  height: 64px;
+  margin-left: -20px;
+  overflow: hidden;
+  background-color: black;
+  border: 2px solid #801ab2;
+  border-radius: 50%; /* делаем круг */
+}
+
+.ingredient_img:first-child {
+  margin-left: 0;
+}
+
+.ingredient_img img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+.hidden_img {
+  opacity: 0.4;
+}
+
+.ingredient_img span {
+  position: absolute;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

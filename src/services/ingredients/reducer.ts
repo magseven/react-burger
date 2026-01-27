@@ -70,6 +70,15 @@ export const selectIngredientById = (
     }
   );
 
+export const selectIngredientsByIds = (
+  ids: string[]
+): ((state: RootState) => TIngredient[]) =>
+  createSelector(selectIngredientsState, (state): TIngredient[] => {
+    if (!ids.length) return [];
+    return ids
+      .map((id) => state.data.find((ingr) => ingr._id === id))
+      .filter((ingr) => !!ingr);
+  });
 export const selectIngredientsLoading = (state: RootState): boolean =>
   state.ingredients.loading;
 

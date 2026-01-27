@@ -2,14 +2,6 @@ export type TOrderRequest = {
   ingredients: string[];
 };
 
-// export type TOrderResponse = {
-//   name: string;
-//   order: {
-//     number: number;
-//   };
-//   success: boolean;
-// };
-
 export type TOrderResponse = {
   success: boolean;
   name: string;
@@ -31,6 +23,27 @@ export type TOrderResponse = {
   updatedAt: string;
   number: number;
   price: number;
+};
+
+export type TOrderSummary = {
+  _id: string;
+  ingredients: string[];
+  owner?: string;
+  status: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  number: number;
+  __v?: number;
+};
+
+export type TOrderSummaryRequest = {
+  number: string;
+};
+
+export type TOrderSummaryResponse = {
+  success: boolean;
+  orders: TOrderSummary[];
 };
 
 export type OrderModalState = {

@@ -11,7 +11,7 @@ import styles from './modal.module.css';
 type TModalProps = {
   isOpen: boolean;
   onClick?: () => void;
-  title: string;
+  title?: string;
   children: React.ReactNode;
 };
 
@@ -35,7 +35,7 @@ const Modal = ({ isOpen, onClick, title, children }: TModalProps): React.JSX.Ele
       <ModalOverlay onClick={onClick} />
       <div className={`${styles.modal}`}>
         <div className={`${styles.header}`}>
-          <p className={`text text_type_main-medium ml-4`}>{title}</p>
+          {title && <p className={`text text_type_main-medium ml-4`}>{title}</p>}
           <CloseIcon type="primary" onClick={onClick} />
         </div>
         {children}

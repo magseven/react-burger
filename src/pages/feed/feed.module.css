@@ -1,0 +1,31 @@
+.title {
+  width: 100%;
+  max-width: 1260px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.main {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  max-width: 1260px;
+  margin-right: auto;
+  margin-left: auto;
+
+  /* height: 100%; */
+  padding-bottom: 20px;
+  overflow: hidden;
+}
+
+.orders_container {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.feedsummary_container {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+}

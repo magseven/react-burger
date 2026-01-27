@@ -1,0 +1,48 @@
+.frame {
+  padding: 16px 24px;
+}
+
+.orders {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  padding: 0 16px;
+}
+
+.ready_orders {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 0 16px;
+}
+
+.doing_orders {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 0 16px;
+}
+
+.alltime {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.today {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ready_columns {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 24px;
+}
+
+.ready_column {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
