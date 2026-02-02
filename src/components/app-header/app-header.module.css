@@ -33,5 +33,5 @@
 
 .iconTextWrapper {
   display: flex;
-  align-items: center; /* выравнивание иконки и текста по вертикали */
+  align-items: center;
 }

@@ -1,0 +1,17 @@
+.main {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  max-width: 1260px;
+  height: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-bottom: 20px;
+  overflow: hidden;
+}
+
+.orders_container {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+}

@@ -1,8 +1,10 @@
 import { Account } from '@/pages/account/account';
+import { Feed } from '@/pages/feed/feed';
 import { ForgotPassword } from '@/pages/forgot-password/forgot-password';
 import { Home } from '@/pages/home/home';
 import { Login } from '@/pages/login/login';
 import { NotFound } from '@/pages/not-found/not-found';
+import { Orders } from '@/pages/orders/orders';
 import { Profile } from '@/pages/profile/profile';
 import { Register } from '@/pages/register/register';
 import { ResetPassword } from '@/pages/reset-password/reset-password';
@@ -24,6 +26,7 @@ import { IngredientDetails } from '@components/ingredient-details/ingredient-det
 import Modal from '@components/modal/modal';
 
 import { OrderDetails } from '../order-details/order-details';
+import { OrderSummary } from '../order-summary/order-summary';
 import { ProtectedRoute } from '../protected-route/protected-route';
 
 import type React from 'react';
@@ -34,6 +37,7 @@ type LocationState = {
   from?: {
     pathname?: string;
   };
+  backgroundLocation?: Location;
   [key: string]: unknown;
 };
 
@@ -64,7 +68,7 @@ export const App = (): React.JSX.Element => {
       if (isOrder) dispatch(closeOrderModal());
 
       const state = location.state as LocationState | null | undefined;
-      const possiblePathname = state?.from?.pathname;
+      const possiblePathname = state?.backgroundLocation?.pathname;
       const targetPath = typeof possiblePathname === 'string' ? possiblePathname : '/';
 
       dispatch(clearOrder());
@@ -82,6 +86,15 @@ export const App = (): React.JSX.Element => {
 
       <Routes location={state?.backgroundLocation ?? location}>
         <Route path="/" element={<Home />} />
+        <Route path="/feed" element={<Feed />} />
+        <Route
+          path="/feed/:id"
+          element={
+            <div className={styles.details}>
+              <OrderSummary />
+            </div>
+          }
+        />
         <Route
           path="/ingredient/:id"
           element={
@@ -92,8 +105,17 @@ export const App = (): React.JSX.Element => {
         />
         <Route path="/profile" element={<ProtectedRoute component={<Profile />} />}>
           <Route index element={<Account />} />
-          <Route path="orders" element={<NotFound />} />
+          <Route path="orders" element={<Orders />} />
         </Route>
+        <Route
+          path="/profile/orders/:id"
+          element={
+            <div className={styles.details}>
+              <OrderSummary />
+            </div>
+          }
+        />
+
         <Route
           path="/forgot-password"
           element={<ProtectedRoute onlyUnAuth component={<ForgotPassword />} />}
@@ -121,6 +143,22 @@ export const App = (): React.JSX.Element => {
 
       {state?.backgroundLocation && (
         <Routes>
+          <Route
+            path="/feed/:id"
+            element={
+              <Modal isOpen={true} onClick={() => handleCloseModal(false)} title="">
+                <OrderSummary />
+              </Modal>
+            }
+          />
+          <Route
+            path="/profile/orders/:id"
+            element={
+              <Modal isOpen={true} onClick={() => handleCloseModal(false)} title="">
+                <OrderSummary />
+              </Modal>
+            }
+          />
           <Route
             path="/ingredient/:id"
             element={

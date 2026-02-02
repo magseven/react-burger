@@ -8,11 +8,12 @@
 
 .details {
   display: flex;
-  justify-content: center; /* горизонтально */
-  align-items: center; /* вертикально */
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
   max-width: 600px;
-  min-height: 100vh; /* растянуть на весь экран */
+
+  /* min-height: 100vh;  */
   margin: 0 auto;
-  padding: 20px; /* отступы */
+  padding: 20px;
 }

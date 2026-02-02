@@ -1,9 +1,9 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 
-import { postOrder } from './action';
+import { getOrder, postOrder } from './action';
 
 import type { RootState } from '../types';
-import type { TOrderResponse } from './types';
+import type { TOrderResponse, TOrderSummary, TOrderSummaryResponse } from './types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 type OrderStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -12,6 +12,7 @@ export type OrderState = {
   data: TOrderResponse | null;
   status: OrderStatus;
   error: string | null;
+  summaryOrder: TOrderSummary | undefined;
 };
 
 export const orderSlice = createSlice({
@@ -20,6 +21,7 @@ export const orderSlice = createSlice({
     data: null as TOrderResponse | null,
     status: 'idle' as 'idle' | 'loading' | 'succeeded' | 'failed',
     error: null as string | null,
+    summaryOrder: undefined as TOrderSummary | undefined,
   },
   reducers: {
     resetOrder: (state) => {
@@ -46,6 +48,15 @@ export const orderSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload ?? 'Ошибка при создании заказа';
         state.data = null;
+      })
+      .addCase(
+        getOrder.fulfilled,
+        (state, action: PayloadAction<TOrderSummaryResponse>) => {
+          state.summaryOrder = action.payload.orders[0];
+        }
+      )
+      .addCase(getOrder.rejected, (state) => {
+        state.summaryOrder = undefined;
       });
   },
 });
@@ -71,4 +82,10 @@ export const selectIsOrderFailed = createSelector(
   [selectOrderStatus],
   (status): boolean => status === 'failed'
 );
+
+export const selectGetOrderSummary = createSelector(
+  [selectOrderState],
+  (orderState): TOrderSummary | undefined => orderState.summaryOrder
+);
+
 export const { resetOrder, clearOrderError } = orderSlice.actions;

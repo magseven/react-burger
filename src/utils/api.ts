@@ -1,7 +1,11 @@
 import BASE_URL from './config-api';
 
 import type { TIngredient } from './types';
-import type { TOrderRequest, TOrderResponse } from '@/services/order/types';
+import type {
+  TOrderRequest,
+  TOrderResponse,
+  TOrderSummaryResponse,
+} from '@/services/order/types';
 
 type ApiError = {
   success?: boolean;
@@ -395,6 +399,10 @@ export const postOrder = (orderData: TOrderRequest): Promise<TOrderResponse> => 
     });
 };
 
+const getOrder = async (number: string): Promise<TOrderSummaryResponse> => {
+  return request<TOrderSummaryResponse>('/orders/' + number);
+};
+
 export const api = {
   getUser,
   login,
@@ -406,4 +414,5 @@ export const api = {
   userPatch,
   getIngredients,
   postOrder,
+  getOrder,
 };

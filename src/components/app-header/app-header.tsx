@@ -30,7 +30,7 @@ export const AppHeader = (): React.JSX.Element => {
             )}
           </NavLink>
           <NavLink
-            to="/orders"
+            to="/feed"
             className={({ isActive }) =>
               `${styles.link} ${isActive ? styles.link_active : ''}`
             }
@@ -38,7 +38,7 @@ export const AppHeader = (): React.JSX.Element => {
             {({ isActive }) => (
               <div className={`${styles.iconTextWrapper} ml-10`}>
                 <ListIcon type={isActive ? 'primary' : 'secondary'} />
-                <p className={`text text_type_main-default ml-2`}>Лента заказов</p>
+                <div className={`text text_type_main-default ml-2`}>Лента заказов</div>
               </div>
             )}
           </NavLink>
