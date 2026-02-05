@@ -95,5 +95,7 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  }
+  },
+  "homepage": "https://magseven.github.io/react-burger"
+  
 }
