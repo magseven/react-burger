@@ -31,23 +31,3 @@ export const ingredientsApi = createApi({
     }),
   }),
 });
-
-// const selectIngredients = ingredientsApi.endpoints.getIngredients.select();
-
-// export const selectIngredientsByType = (
-//   type: string
-// ): ((state: RootState) => TIngredient[]) =>
-//   createSelector(selectIngredients, (result): TIngredient[] =>
-//     (result.data?.data ?? []).filter((ingr) => ingr.type === type)
-//   );
-
-// export const selectIngredientById = (
-//   id?: string
-// ): ((state: RootState) => TIngredient | null) =>
-//   createSelector(selectIngredients, (result): TIngredient | null => {
-//     if (!id) return null;
-//     const ingredients = result.data?.data ?? [];
-//     return ingredients.find((ingr) => ingr._id === id) ?? null;
-//   });
-
-// export const { useGetIngredientsQuery } = ingredientsApi;

@@ -28,6 +28,7 @@ export const orderSlice = createSlice({
       state.data = null;
       state.status = 'idle';
       state.error = null;
+      state.summaryOrder = undefined;
     },
     clearOrderError: (state) => {
       state.error = null;

@@ -6,17 +6,38 @@ import type { RootState } from '../types';
 import type { TTab } from '@/components/burger-ingredients/types';
 import type { TIngredient } from '@/utils/types';
 
-type IngredientsState = {
+export type IngredientsState = {
   data: TIngredient[];
   loading: boolean;
   error: string | null;
 };
 
-const initialState: IngredientsState = {
+export const initialState: IngredientsState = {
   data: [],
   loading: false,
   error: null,
 };
+
+// export const ingredientsSlice = createSlice({
+//   name: 'ingredients',
+//   initialState,
+//   reducers: {},
+//   extraReducers: (builder) => {
+//     builder
+//       .addCase(getIngredients.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//       })
+//       .addCase(getIngredients.fulfilled, (state, action) => {
+//         state.loading = false;
+//         state.data = action.payload;
+//       })
+//       .addCase(getIngredients.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = (action.payload as string) ?? action.error.message ?? 'Ошибка';
+//       });
+//   },
+// });
 
 export const ingredientsSlice = createSlice({
   name: 'ingredients',
@@ -34,7 +55,7 @@ export const ingredientsSlice = createSlice({
       })
       .addCase(getIngredients.rejected, (state, action) => {
         state.loading = false;
-        state.error = (action.payload as string) ?? action.error.message ?? 'Ошибка';
+        state.error = (action.payload as string) ?? action.error?.message ?? 'Ошибка';
       });
   },
 });

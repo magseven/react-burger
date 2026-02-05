@@ -26,6 +26,7 @@ const BurgerIngredientsGrid = ({
             key={ingr._id}
             to={`/ingredient/${ingr._id}`}
             state={{ backgroundLocation: location }}
+            data-testid={`ingredient-${type}`}
           >
             <BurgerIngredient
               key={ingr._id}
