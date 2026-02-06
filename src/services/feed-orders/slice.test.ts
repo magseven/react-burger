@@ -46,11 +46,8 @@ describe('Feed Slice', () => {
 
   describe('initial state', () => {
     it('should have correct initial state', () => {
-      expect(initialState).toEqual({
-        status: WebsocketStatus.OFFLINE,
-        data: { orders: [], total: 0, totalToday: 0 },
-        error: null,
-      });
+      const state = feedSlice.reducer(undefined, { type: 'unknown' });
+      expect(state).toEqual(initialState);
     });
 
     it('should match WebsocketStatus enum values', () => {

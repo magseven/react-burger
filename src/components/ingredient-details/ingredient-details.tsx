@@ -10,7 +10,7 @@ export const IngredientDetails = (): React.JSX.Element => {
 
   if (!ingredientSelector) return <div>Ингредиент не найден!</div>;
   return (
-    <div className={styles.container} data-testid="ingredient-details">
+    <div className={styles.container} data-testid="ingredient-details" data-id={id}>
       <img
         src={ingredientSelector.image_large}
         alt={`Изображение ${ingredientSelector.name}`}

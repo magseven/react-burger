@@ -72,10 +72,8 @@ describe('Constructor Slice', () => {
 
   describe('initial state', () => {
     it('should have correct initial state', () => {
-      expect(initialState).toEqual({
-        bun: null,
-        ingredients: [],
-      });
+      const state = ctorSlice.reducer(undefined, { type: 'unknown' });
+      expect(state).toEqual(initialState);
     });
   });
 

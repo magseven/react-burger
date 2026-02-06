@@ -78,7 +78,7 @@ export const BurgerConstructor = ({
         </DropTarget>
       ) : (
         <DropTarget type={TabNames.bun} onDropHandler={handleDrop}>
-          <div data-testid="burger-constructor-bun">
+          <div data-testid="burger-constructor-bun" data-id={bun._id}>
             <ConstructorElement
               extraClass={`${styles['burger-constructor__element-min-height']} ${styles.bun_text} ml-7`}
               text={`${bun.name}\n${bunTopText}`}
@@ -119,16 +119,17 @@ export const BurgerConstructor = ({
             {ingredients
               .filter((ingr) => ingr.type !== TabNames.bun)
               .map((ingr, index) => (
-                <SortableIngredient
-                  extraClass={`${styles['burger-constructor__element-max-height']}`}
-                  id={ingr.id!}
-                  key={ingr.id}
-                  text={ingr.name}
-                  price={ingr.price}
-                  thumbnail={ingr.image}
-                  index={index}
-                  handleClose={() => handleClose(ingr.id!)}
-                />
+                <div key={ingr.id} data-id={ingr._id}>
+                  <SortableIngredient
+                    extraClass={`${styles['burger-constructor__element-max-height']}`}
+                    id={ingr.id!}
+                    text={ingr.name}
+                    price={ingr.price}
+                    thumbnail={ingr.image}
+                    index={index}
+                    handleClose={() => handleClose(ingr.id!)}
+                  />
+                </div>
               ))}
           </div>
         </DropTarget>
@@ -150,7 +151,7 @@ export const BurgerConstructor = ({
         </DropTarget>
       ) : (
         <DropTarget type={TabNames.bun} onDropHandler={handleDrop}>
-          <div data-testid="burger-constructor-bun">
+          <div data-testid="burger-constructor-bun" data-id={bun._id}>
             <ConstructorElement
               extraClass={`${styles['burger-constructor__element-min-height']} ${styles.bun_text} ml-7`}
               text={`${bun.name}\n${bunBottomText}`}
@@ -173,6 +174,7 @@ export const BurgerConstructor = ({
           size="medium"
           disabled={bun === null}
           onClick={onOrderClick}
+          data-testid="order-button"
         >
           {orderLoading ? 'Заказ оформляется' : 'Оформить заказ'}
         </Button>

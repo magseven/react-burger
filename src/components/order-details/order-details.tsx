@@ -10,7 +10,13 @@ export const OrderDetails = (): React.JSX.Element => {
   return (
     <>
       <span className="text text_type_digits-large mb-4">{orderNumber}</span>
-      <span className="text text_type_main-default mb-6">Идентификатор заказа</span>
+      <span
+        className="text text_type_main-default mb-6"
+        data-testid="order-details-number"
+        data-id={orderNumber}
+      >
+        Идентификатор заказа
+      </span>
       <div className={styles.circle}>
         <CheckMarkIcon type="primary" />
       </div>

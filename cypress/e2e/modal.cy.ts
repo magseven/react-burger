@@ -5,12 +5,18 @@ describe('Ingredient Details Modal', () => {
   });
 
   it('should open modal when clicking on ingredient', () => {
-    cy.get('[data-testid="ingredient-bun"]').first().click();
-
-    cy.get('[data-testid="modal-overlay"]').should('exist');
-    cy.get('[data-testid="modal"]').should('be.visible');
-    cy.get('[data-testid="ingredient-details"]').should('be.visible');
-    cy.get('[data-testid="modal-close-button"]').should('be.visible');
+    cy.get('[data-testid="ingredient-bun"]').first().as('bun');
+    cy.get('@bun')
+      .invoke('attr', 'data-id')
+      .then((id) => {
+        cy.get('@bun').click();
+        cy.get('[data-testid="modal-overlay"]').should('exist');
+        cy.get('[data-testid="modal"]').should('be.visible');
+        cy.get('[data-testid="ingredient-details"]').as('ingredientDetails');
+        cy.get('@ingredientDetails').should('be.visible');
+        cy.get('@ingredientDetails').should('have.attr', 'data-id', id);
+        cy.get('[data-testid="modal-close-button"]').should('be.visible');
+      });
   });
 
   it('should close modal by clicking close button', () => {
