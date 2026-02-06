@@ -28,12 +28,15 @@ export const feedSlice = createSlice({
   reducers: {
     wsConnecting: (state) => {
       state.status = WebsocketStatus.CONNECTING;
+      state.error = null;
     },
     wsOpen: (state) => {
       state.status = WebsocketStatus.ONLINE;
+      state.error = null;
     },
     wsClose: (state) => {
       state.status = WebsocketStatus.OFFLINE;
+      state.error = null;
     },
     wsError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;

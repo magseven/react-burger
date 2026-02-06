@@ -33,10 +33,12 @@ const Modal = ({ isOpen, onClick, title, children }: TModalProps): React.JSX.Ele
   return ReactDOM.createPortal(
     <>
       <ModalOverlay onClick={onClick} />
-      <div className={`${styles.modal}`}>
+      <div className={`${styles.modal}`} data-testid="modal">
         <div className={`${styles.header}`}>
           {title && <p className={`text text_type_main-medium ml-4`}>{title}</p>}
-          <CloseIcon type="primary" onClick={onClick} />
+          <div data-testid="modal-close-button">
+            <CloseIcon type="primary" onClick={onClick} />
+          </div>
         </div>
         {children}
       </div>

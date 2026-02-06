@@ -68,6 +68,7 @@ export const BurgerConstructor = ({
           onHoverHandler={handleHover}
         >
           <div
+            data-testid="burger-constructor-blank-bun"
             className={`${styles['burger-constructor_blank_element']} 
                          ${styles['burger-constructor__top_blank_element']} 
                          text text_type_main-small ml-7 ${bunTargetHovered ? styles.hover_bun_border : ''}`}
@@ -77,20 +78,25 @@ export const BurgerConstructor = ({
         </DropTarget>
       ) : (
         <DropTarget type={TabNames.bun} onDropHandler={handleDrop}>
-          <ConstructorElement
-            extraClass={`${styles['burger-constructor__element-min-height']} ${styles.bun_text} ml-7`}
-            text={`${bun.name}\n${bunTopText}`}
-            price={bun.price}
-            thumbnail={bun.image}
-            type="top"
-            isLocked={true}
-          />
+          <div data-testid="burger-constructor-bun" data-id={bun._id}>
+            <ConstructorElement
+              extraClass={`${styles['burger-constructor__element-min-height']} ${styles.bun_text} ml-7`}
+              text={`${bun.name}\n${bunTopText}`}
+              price={bun.price}
+              thumbnail={bun.image}
+              type="top"
+              isLocked={true}
+            />
+          </div>
         </DropTarget>
       )}
 
       {!ingredients.length ? (
         <DropTarget type="ingredient" onDropHandler={handleDrop}>
-          <div className={styles.burger_constructor_frame}>
+          <div
+            data-testid="burger-constructor-blank-ingredient"
+            className={styles.burger_constructor_frame}
+          >
             <div
               className={`${styles['burger-constructor_blank_element']} 
                          ${styles['burger-constructor__middle_blank_element']}  
@@ -106,20 +112,24 @@ export const BurgerConstructor = ({
           onDropHandler={handleDrop}
           className={`${styles['burger-constructor__element-min-height']}`}
         >
-          <div className={styles.burger_constructor_frame}>
+          <div
+            data-testid="burger-constructor-ingredients"
+            className={styles.burger_constructor_frame}
+          >
             {ingredients
               .filter((ingr) => ingr.type !== TabNames.bun)
               .map((ingr, index) => (
-                <SortableIngredient
-                  extraClass={`${styles['burger-constructor__element-max-height']}`}
-                  id={ingr.id!}
-                  key={ingr.id}
-                  text={ingr.name}
-                  price={ingr.price}
-                  thumbnail={ingr.image}
-                  index={index}
-                  handleClose={() => handleClose(ingr.id!)}
-                />
+                <div key={ingr.id} data-id={ingr._id}>
+                  <SortableIngredient
+                    extraClass={`${styles['burger-constructor__element-max-height']}`}
+                    id={ingr.id!}
+                    text={ingr.name}
+                    price={ingr.price}
+                    thumbnail={ingr.image}
+                    index={index}
+                    handleClose={() => handleClose(ingr.id!)}
+                  />
+                </div>
               ))}
           </div>
         </DropTarget>
@@ -131,6 +141,7 @@ export const BurgerConstructor = ({
           onHoverHandler={handleHover}
         >
           <div
+            data-testid="burger-constructor-blank-bun"
             className={`${styles['burger-constructor_blank_element']} 
                          ${styles['burger-constructor__bottom_blank_element']} 
                          text text_type_main-small ml-7 ${bunTargetHovered ? styles.hover_bun_border : ''}`}
@@ -140,14 +151,16 @@ export const BurgerConstructor = ({
         </DropTarget>
       ) : (
         <DropTarget type={TabNames.bun} onDropHandler={handleDrop}>
-          <ConstructorElement
-            extraClass={`${styles['burger-constructor__element-min-height']} ${styles.bun_text} ml-7`}
-            text={`${bun.name}\n${bunBottomText}`}
-            price={bun.price}
-            thumbnail={bun.image}
-            type="bottom"
-            isLocked={true}
-          />
+          <div data-testid="burger-constructor-bun" data-id={bun._id}>
+            <ConstructorElement
+              extraClass={`${styles['burger-constructor__element-min-height']} ${styles.bun_text} ml-7`}
+              text={`${bun.name}\n${bunBottomText}`}
+              price={bun.price}
+              thumbnail={bun.image}
+              type="bottom"
+              isLocked={true}
+            />
+          </div>
         </DropTarget>
       )}
       <div className={styles.burger_constructor_total}>
@@ -161,6 +174,7 @@ export const BurgerConstructor = ({
           size="medium"
           disabled={bun === null}
           onClick={onOrderClick}
+          data-testid="order-button"
         >
           {orderLoading ? 'Заказ оформляется' : 'Оформить заказ'}
         </Button>

@@ -61,7 +61,13 @@ export function Login(): React.JSX.Element {
             value={values.password}
             onChange={handleChange}
           />
-          <Button size="large" type="primary" extraClass={'mb-15'} htmlType="submit">
+          <Button
+            size="large"
+            type="primary"
+            extraClass={'mb-15'}
+            htmlType="submit"
+            data-testid="login-button"
+          >
             Войти
           </Button>
         </form>
